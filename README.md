@@ -1,5 +1,5 @@
 # Predictive-Modeling-Exercises
-This is for the Predictive Modeling class. Authors: Matthew Leong, Grayson Taylor, Chirag Ramesh, Paridhi Sheth
+This is for the Predictive Modeling class. Authors: Matthew Leong, Chirag Ramesh, Paridhi Sheth and Grayson Taylor. 
 
 
 
