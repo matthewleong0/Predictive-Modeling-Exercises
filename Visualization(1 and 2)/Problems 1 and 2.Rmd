@@ -1,0 +1,25 @@
+---
+title: "Problem 1 and 2"
+author: "Matthew Leong"
+date: "8/11/2020"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1: 
+
+```{r cars}
+summary(cars)
+```
+
+## Problem 2:
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
