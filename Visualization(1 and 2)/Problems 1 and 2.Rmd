@@ -8,7 +8,7 @@ date: "8/11/2020"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, echo = False}
+```{r, echo = FALSE}
 #load in various libraries
 library(ggplot2)
 library(knitr)
@@ -38,15 +38,28 @@ cat("which is a percentage difference of",percentage_len,'percent.')
   
 After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there are other problems with this analysis in general. First is that he assumes a causal relationship or strong positive correlation between rent and green rating. He separated green and non green apartments without considering if rent really does increase based on green certification.    
   
-```{r}
+```{r, echo = FALSE}
 #Box plot
 ggplot(data=green_df2) + 
   geom_boxplot(mapping=aes(x=as.factor(green_rating), y=Rent)) +
   scale_x_discrete(labels = c('Standard Energy','Green Certified')) +
-  labs(x='Building Status',title='Boxplot of Rent vs Certification Status')
+  labs(x='Building Status',title='Boxplot of Rent vs Certification Status') + 
+  coord_flip()
 ```
   
 As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. Although the mean and median are higher in green certified buildings, that does not mean that the rent will be higher when the project is constructed. Instead other factors should be taken into account in addition to rent and the green certification status of the building. 
+  
+```{r, echo = FALSE}
+#Boxplot for rent and high class buildings
+ggplot(data = green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(class_a), y=Rent)) +
+  scale_x_discrete(labels = c('Medium/Low Quality','High Quality')) + 
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Highest Quality Buildings',y='Rent',title = 'Boxplot of Rent based on quality of the building and green certification') +
+  coord_flip()
+```
+  
+If we add in the quality of the building to our consideration, then we find that while rent is 
   
 ```{r}
 #Scatterplot for rent and cluster rent.
@@ -57,8 +70,9 @@ ggplot(data = green_df2) +
   labs(y='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by building status')
 ```
   
-If we look at the scatterplot for rent and average local market rent.
+If we look at the scatterplot for rent and average local market rent. 
   
+
   
 ## Problem 2:
 

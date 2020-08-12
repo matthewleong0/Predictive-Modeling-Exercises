@@ -46,7 +46,16 @@ labels <- c("0" = "Standard Energy","1" = "Green Certified")
 ggplot(data = green_df2) + 
   geom_point(mapping = aes(x = Rent, y = cluster_rent),alpha=0.5) + 
   facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
-  labs(y='Average rent in the local market',title = 'Scatterplot of average market rent vs rent sorted by building status')
+  labs(y='Average rent in the local market',title = 'Scatterplot of average market rent vs rent sorted by green certifciation')
+
+#Boxplot for rent and high class buildings
+ggplot(data = green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(class_a), y=Rent)) +
+  scale_x_discrete(labels = c('Medium/Low Quality','High Quality')) + 
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Highest Quality Buildings',y='Rent',title = 'Boxplot of Rent based on quality of the building and green certification') +
+  coord_flip()
+
 
 
 
