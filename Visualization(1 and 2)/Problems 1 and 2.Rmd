@@ -8,12 +8,58 @@ date: "8/11/2020"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Problem 1: 
-
-```{r cars}
-summary(cars)
+```{r, echo = False}
+#load in various libraries
+library(ggplot2)
+library(knitr)
+library(tidyverse)
+library(mosaic)
 ```
 
+The 'Excel guru" took out the buildings with very low occupancy rates (so leasing rate) (less than 10%). He seperated green and non green buildings (based on green rating). He looked at market rent (Rent) variable. Notably we see that the guru did not look into cluster rent. He also did not take into account net: indicator for whether the rent is quoted on a "net contract" basis. Net rental meaning pay their own utility costs. These costs are not included in rent. The real estate developer wants to build her project on East Cesar Chavez, across the I-35. $100 million baseline cost plus 5% premium for green certification.  
+## Problem 1: 
+
+First, we wanted to check how much data was lost when the "Excel guru" cleaned the data in order to check if there was an unacceptable amount of data lost.
+
+```{r, echo = FALSE}
+#Compare the two lengths to see if the guy dropped too many outliers.
+green_df = read.csv('greenbuildings.csv')
+#Dropped based on lease 
+green_df2 <- subset(green_df, leasing_rate >= 10)
+original_len = dim(green_df)[1]
+new_len = dim(green_df2)[1]
+diff_len = original_len-new_len
+percentage_len = diff_lench/original_len*100
+cat("The original dataset originally had",original_len,"observations.","\n")
+cat("The new cleaned dataset has",new_len,"observations.","\n")
+cat("They differ by",diff_len,"observations ")
+cat("which is a percentage difference of",percentage_len,'percent.')
+```
+  
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there are other problems with this analysis in general. First is that he assumes a causal relationship or strong positive correlation between rent and green rating. He separated green and non green apartments without considering if rent really does increase based on green certification.    
+  
+```{r}
+#Box plot
+ggplot(data=green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(green_rating), y=Rent)) +
+  scale_x_discrete(labels = c('Standard Energy','Green Certified')) +
+  labs(x='Building Status',title='Boxplot of Rent vs Certification Status')
+```
+  
+As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. Although the mean and median are higher in green certified buildings, that does not mean that the rent will be higher when the project is constructed. Instead other factors should be taken into account in addition to rent and the green certification status of the building. 
+  
+```{r}
+#Scatterplot for rent and cluster rent.
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) + 
+  geom_point(mapping = aes(x = Rent, y = cluster_rent),alpha=0.5) + 
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(y='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by building status')
+```
+  
+If we look at the scatterplot for rent and average local market rent.
+  
+  
 ## Problem 2:
 
 You can also embed plots, for example:
