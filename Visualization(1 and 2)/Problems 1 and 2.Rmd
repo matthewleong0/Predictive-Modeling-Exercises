@@ -19,7 +19,7 @@ library(mosaic)
 The 'Excel guru" took out the buildings with very low occupancy rates (so leasing rate) (less than 10%). He seperated green and non green buildings (based on green rating). He looked at market rent (Rent) variable. Notably we see that the guru did not look into cluster rent. He also did not take into account net: indicator for whether the rent is quoted on a "net contract" basis. Net rental meaning pay their own utility costs. These costs are not included in rent. The real estate developer wants to build her project on East Cesar Chavez, across the I-35. $100 million baseline cost plus 5% premium for green certification.  
 ## Problem 1: 
 
-First, we wanted to check how much data was lost when the "Excel guru" cleaned the data in order to check if there was an unacceptable amount of data lost.
+There were a number of things that sounded off about the "Excel guru"'s analysis but first, we wanted to check if there was an unacceptable amount of data lost.
 
 ```{r, echo = FALSE}
 #Compare the two lengths to see if the guy dropped too many outliers.
@@ -36,7 +36,7 @@ cat("They differ by",diff_len,"observations ")
 cat("which is a percentage difference of",percentage_len,'percent.')
 ```
   
-After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there are other problems with this analysis in general. First is that he assumes a causal relationship or strong positive correlation between rent and green rating. He separated green and non green apartments without considering if rent really does increase based on green certification.    
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating without considering any other variables that could affect the two. Fundamentally, the analysis done on the split between green certifications and non green certifications is based on this incorrect assumption.  
   
 ```{r, echo = FALSE}
 #Box plot
@@ -47,8 +47,8 @@ ggplot(data=green_df2) +
   coord_flip()
 ```
   
-As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. Although the mean and median are higher in green certified buildings, that does not mean that the rent will be higher when the project is constructed. Instead other factors should be taken into account in addition to rent and the green certification status of the building. 
-  
+The box plot demonstrates the distribution of the split that the guru did. As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. The guru ignores the overall distribution though and bases his analysis on the median. The median here is misleading as while it is higher on this distribution, it will not necessarily hold true when we add in additional factors. For instance, let us see what would happen when we add in whether or not a building is high quality. 
+    
 ```{r, echo = FALSE}
 #Boxplot for rent and high class buildings
 ggplot(data = green_df2) + 
@@ -59,7 +59,7 @@ ggplot(data = green_df2) +
   coord_flip()
 ```
   
-If we add in the quality of the building to our consideration, then we find that while rent is 
+Naturally, as one would expect, high class buildings have a higher rent associated with them. Basing our analysis off of median, we can see in the box plot that while green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. This is essentially a confounding variable problem which entails how another different variable could affect rent and green certification status. 
   
 ```{r}
 #Scatterplot for rent and cluster rent.
