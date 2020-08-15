@@ -2,6 +2,7 @@
 title: "Problem 1 and 2"
 author: "Matthew Leong"
 date: "8/11/2020"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -29,7 +30,7 @@ green_df2 <- subset(green_df, leasing_rate >= 10)
 original_len = dim(green_df)[1]
 new_len = dim(green_df2)[1]
 diff_len = original_len-new_len
-percentage_len = diff_lench/original_len*100
+percentage_len = diff_len/original_len*100
 cat("The original dataset originally had",original_len,"observations.","\n")
 cat("The new cleaned dataset has",new_len,"observations.","\n")
 cat("They differ by",diff_len,"observations ")
