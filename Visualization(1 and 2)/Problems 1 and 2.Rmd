@@ -36,7 +36,7 @@ cat("They differ by",diff_len,"observations ")
 cat("which is a percentage difference of",percentage_len,'percent.')
 ```
   
-After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating without considering any other variables that could affect the two. Fundamentally, the analysis done on the split between green certifications and non green certifications is based on this incorrect assumption.  
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating and assumes that the other variables are unrelated. To demonstrate, this issue let's look at the boxplot obtained when the other variables are not considered.
   
 ```{r, echo = FALSE}
 #Box plot
