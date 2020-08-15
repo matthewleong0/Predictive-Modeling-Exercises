@@ -16,7 +16,7 @@ ggplot(data=green_df) +
   labs(title = 'Distribution of low lease rates', x= "Occupancy Rate")
 
 
-linear_model = lm(green_df2$Rent~.,data = green_df2)
+linear_model = lm(green_df2$green_rating~.,data = green_df2)
 summary(linear_model)
 #Use subset to get the guru's cleaned dataframe.
 green_df2 <- subset(green_df, leasing_rate >= 10)
@@ -34,6 +34,14 @@ ggplot(data=green_df2) +
   scale_x_discrete(labels = c('Standard Energy','Green Certified')) +
   labs(x='Building Status',title='Boxplot of Rent vs Building Status')
 green_df2
+
+#Box plot
+ggplot(data=green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(green_rating), y=Electricity_Costs)) +
+  scale_x_discrete(labels = c('Standard Energy','Green Certified')) +
+  labs(x='Building Status',title='Boxplot of Rent vs Building Status') +
+  coord_flip()
+
 
 
 #correlation matrix

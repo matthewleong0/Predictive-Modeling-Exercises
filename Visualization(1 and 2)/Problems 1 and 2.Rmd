@@ -15,9 +15,9 @@ library(mosaic)
 ```
   
 ## Problem 1: 
-
+  
 There were a number of things that sounded off about the "Excel guru"'s analysis but first, we wanted to check if there was an unacceptable amount of data lost.
-
+  
 ```{r, echo = FALSE}
 #Compare the two lengths to see if the guy dropped too many outliers.
 green_df = read.csv('greenbuildings.csv')
@@ -37,7 +37,7 @@ cat("There are", dim(certifiedgreen_df)[1],'green certified buildings in the dat
 cat("There are",dim(standard_df)[1],'non green certified buildings in the data set.')
 ```
   
-After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating without considering the other variables. To demonstrate this issue, let's look at the boxplot obtained when the other variables are not considered.
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. As such, we will also be using this subset of the data for our plots. However, the guru's analysis falls apart because he forgot to consider other variables. To demonstrate this issue, let's look at the box plot obtained when the other variables are not considered.
   
 ```{r, echo = FALSE}
 #Box plot
@@ -48,7 +48,7 @@ ggplot(data=green_df2) +
   coord_flip()
 ```
   
-The box plot demonstrates the distribution of the split that the guru did. As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. The guru ignores the overall distribution though and bases his analysis on the median. The median here is misleading as while it is higher on this distribution, it will not necessarily hold true when we add in additional factors. For instance, let us see what would happen when we add in whether or not a building is high quality. 
+The box plot demonstrates the distribution of the split that the guru did. As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. However, the guru ignores this overall distribution in favor of focusing on the median. The median here is misleading as while it is higher on this distribution, it will not necessarily hold true when we add in additional factors. For instance, let us see what would happen when we add in whether or not a building is high quality. 
     
 ```{r, echo = FALSE}
 #Boxplot for rent and high class buildings
@@ -60,7 +60,7 @@ ggplot(data = green_df2) +
   coord_flip()
 ```
   
-Naturally, as one would expect, high class buildings have a higher rent associated with them. Basing our analysis off of median, we can see in the box plot that while green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. This is essentially a confounding variable problem which entails how another different variable could affect rent and/or green certification status. 
+Naturally, as one would expect, high class buildings have a higher rent associated with them. If we go with the median standard, we can see that although green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. So this begs the question of why rent is suddenly the same. The answer is that this is a confounding variable problem which is basically how another variable like high class status affects rent and green certification status. This is not the only confounding variable. 
   
 ```{r}
 #Scatterplot for rent and cluster rent.
@@ -71,7 +71,7 @@ ggplot(data = green_df2) +
   labs(x='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by green certification')
 ```
   
-Another such confounding variable left out by the guru is the average rent in the local market. This variable has a key relationship with rent charged in that they essentially deal with the same thing. If green certified buildings netted a higher rent, this would be reflected in the graph when controlling for average rent in the local market. However according to the graph, it seems that green certified buildings perform worse but are more consistent overall which can be explained by the fact that there are a lot fewer green certified buildings than non green certified buildings. Additionally, the distributions are fairly similar implying that green certification does not actually affect the rent price. Let's look at a couple more potential confounding variables and see if the distributions differ.
+Another such confounding variable left out by the guru is the average rent in the local market. This variable has a key relationship with rent charged in that they essentially deal with the same thing. If green certified buildings netted a higher rent, this would be reflected in the graph when controlling for average rent in the local market. However according to the graph, it seems that green certified buildings perform worse but are more consistent overall which can be explained by the fact that there are a lot fewer green certified buildings than non green certified buildings. Additionally, the distributions are fairly similar implying that green certification does not actually affect the rent price. To further support this case, let's look at a couple more potential confounding variables and see if the distributions differ.
   
 ```{r}
 #Electricity
@@ -82,7 +82,7 @@ ggplot(data = green_df2) +
   labs(x='Electricity cost in local markets',title = 'Rent vs Electricity cost based on green certification')
 ```
   
-Again, when controlling for electricity costs, we can see that the distributions do not differ significantly further supporting the case that green certification does not necessarily mean higher rent. In fact when looking at the distribution, the rent seems lower in the green certified buildings. One possible explanation for this phenomenon is that green buildings have lower fixed costs than standard energy buildings which allow them to charge less rent based on energy usage.
+Again, when controlling for electricity costs, we can see that the distributions do not differ significantly further implying that rent and green certification are unrelated. In fact when looking at the distribution, the rent appears to be lower in the green certified buildings. One possible explanation for this phenomenon is that green buildings have lower fixed costs than standard energy buildings which allow them to charge less rent based on energy usage. This odd phenomenon is also reflected in another energy measurement variable.
   
 ```{r}
 #total_dd_07
@@ -95,8 +95,8 @@ ggplot(data = green_df2) +
   
 Degree days in this data set are essentially measures of demand for energy where higher values mean greater demand. As this is another energy variable, we would expect to see and do actually see a similar distribution in that green certified buildings have lower rent than standard energy buildings.  
   
-In conclusion, the confounding variable problem makes the guru's analysis invalid. When controlling for such variables, we can see evidence that points towards green certified buildings have equal or even lower rent than non green certified ones. We can conclude that going green does not necessarily mean higher rent. TO further verify this conclusion, we recommend a linear regression or some other similar predictive modeling algorithm to control for all the variables and see which ones would actually lead to higher rent. Additionally, we would recommend running such a model on the green rating as well to determine other potential factors that are actually related to green buildings. As it stands now though, we do not recommend building a green building as it makes no difference being able to charge a higher rent to reccuperate the costs of certification.
+In conclusion, the confounding variable problem invalidates the guru's analysis. When controlling for such variables, we can see evidence that points towards green certified buildings have equal or even lower rent than non green certified ones. We can conclude that going green does not necessarily mean higher rent. TO further verify this conclusion, we recommend a linear regression or some other similar predictive modeling algorithm to control for all the variables and see which ones would actually lead to higher rent. In fact having run the model ourselves, we found that green rating has no significant relationship with rent. Additionally, we would recommend running such a model on the green rating to determine other potential factors that are actually related to green buildings. Regardless, we do not recommend investing in a green building as it does not yield higher rent and has an additional premium attached to it.
   
 ## Problem 2:
-
+  
 
