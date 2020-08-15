@@ -56,13 +56,11 @@ ggplot(data = green_df2) +
   labs(x='Highest Quality Buildings',y='Rent',title = 'Boxplot of Rent based on quality of the building and green certification') +
   coord_flip()
 
-
-
-
 certifiedgreen_df = subset(green_df2, green_rating==1)
 standard_df = subset(green_df2, green_rating==0)
-summary(certifiedgreen_df$Rent)
-summary(standard_df$Rent)
+dim(certifiedgreen_df)[1]
+dim(standard_df)[1]
+
 
 
 

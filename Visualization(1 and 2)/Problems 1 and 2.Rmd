@@ -14,9 +14,6 @@ library(tidyverse)
 library(mosaic)
 ```
   
-
-The 'Excel guru" took out the buildings with very low occupancy rates (so leasing rate) (less than 10%). He seperated green and non green buildings (based on green rating). He looked at market rent (Rent) variable. Notably we see that the guru did not look into cluster rent. He also did not take into account net: indicator for whether the rent is quoted on a "net contract" basis. Net rental meaning pay their own utility costs. These costs are not included in rent. The real estate developer wants to build her project on East Cesar Chavez, across the I-35. $100 million baseline cost plus 5% premium for green certification.  
-  
 ## Problem 1: 
 
 There were a number of things that sounded off about the "Excel guru"'s analysis but first, we wanted to check if there was an unacceptable amount of data lost.
@@ -30,13 +27,17 @@ original_len = dim(green_df)[1]
 new_len = dim(green_df2)[1]
 diff_len = original_len-new_len
 percentage_len = diff_len/original_len*100
+certifiedgreen_df = subset(green_df2, green_rating==1)
+standard_df = subset(green_df2, green_rating==0)
 cat("The original dataset originally had",original_len,"observations.","\n")
 cat("The new cleaned dataset has",new_len,"observations.","\n")
 cat("They differ by",diff_len,"observations ")
-cat("which is a percentage difference of",percentage_len,'percent.')
+cat("which is a percentage difference of",percentage_len,'percent.\n')
+cat("There are", dim(certifiedgreen_df)[1],'green certified buildings in the data set.\n')
+cat("There are",dim(standard_df)[1],'non green certified buildings in the data set.')
 ```
   
-After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating and assumes that the other variables are unrelated. To demonstrate, this issue let's look at the boxplot obtained when the other variables are not considered.
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. However, there is a key issue with this analysis in general. He assumes a causal relationship or strong positive correlation between rent and green rating without considering the other variables. To demonstrate this issue, let's look at the boxplot obtained when the other variables are not considered.
   
 ```{r, echo = FALSE}
 #Box plot
@@ -59,23 +60,43 @@ ggplot(data = green_df2) +
   coord_flip()
 ```
   
-Naturally, as one would expect, high class buildings have a higher rent associated with them. Basing our analysis off of median, we can see in the box plot that while green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. This is essentially a confounding variable problem which entails how another different variable could affect rent and green certification status. 
+Naturally, as one would expect, high class buildings have a higher rent associated with them. Basing our analysis off of median, we can see in the box plot that while green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. This is essentially a confounding variable problem which entails how another different variable could affect rent and/or green certification status. 
   
 ```{r}
 #Scatterplot for rent and cluster rent.
 labels <- c("0" = "Standard Energy","1" = "Green Certified")
 ggplot(data = green_df2) + 
-  geom_point(mapping = aes(x = Rent, y = cluster_rent),alpha=0.5) + 
+  geom_point(mapping = aes(x = cluster_rent, y = Rent),alpha=0.5) + 
   facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
-  labs(y='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by building status')
+  labs(x='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by green certification')
 ```
   
-If we look at the scatterplot for rent and average local market rent. 
+Another such confounding variable left out by the guru is the average rent in the local market. This variable has a key relationship with rent charged in that they essentially deal with the same thing. If green certified buildings netted a higher rent, this would be reflected in the graph when controlling for average rent in the local market. However according to the graph, it seems that green certified buildings perform worse but are more consistent overall which can be explained by the fact that there are a lot fewer green certified buildings than non green certified buildings. Additionally, the distributions are fairly similar implying that green certification does not actually affect the rent price. Let's look at a couple more potential confounding variables and see if the distributions differ.
   
-
+```{r}
+#Electricity
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) +
+  geom_point(mapping = aes(x = Electricity_Costs, y = Rent),alpha=0.5) +
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Electricity cost in local markets',title = 'Rent vs Electricity cost based on green certification')
+```
+  
+Again, when controlling for electricity costs, we can see that the distributions do not differ significantly further supporting the case that green certification does not necessarily mean higher rent. In fact when looking at the distribution, the rent seems lower in the green certified buildings. One possible explanation for this phenomenon is that green buildings have lower fixed costs than standard energy buildings which allow them to charge less rent based on energy usage.
+  
+```{r}
+#total_dd_07
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) +
+  geom_point(mapping = aes(x = total_dd_07, y = Rent),alpha=0.5) +
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Degree Days ',title = 'Rent vs Degree Days based on green certification')
+```
+  
+Degree days in this data set are essentially measures of demand for energy where higher values mean greater demand. As this is another energy variable, we would expect to see and do actually see a similar distribution in that green certified buildings have lower rent than standard energy buildings.  
+  
+In conclusion, the confounding variable problem makes the guru's analysis invalid. When controlling for such variables, we can see evidence that points towards green certified buildings have equal or even lower rent than non green certified ones. We can conclude that going green does not necessarily mean higher rent. TO further verify this conclusion, we recommend a linear regression or some other similar predictive modeling algorithm to control for all the variables and see which ones would actually lead to higher rent. Additionally, we would recommend running such a model on the green rating as well to determine other potential factors that are actually related to green buildings. As it stands now though, we do not recommend building a green building as it makes no difference being able to charge a higher rent to reccuperate the costs of certification.
   
 ## Problem 2:
 
-You can also embed plots, for example:
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
