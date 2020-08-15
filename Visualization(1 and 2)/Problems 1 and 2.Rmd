@@ -6,18 +6,17 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 #load in various libraries
 library(ggplot2)
 library(knitr)
 library(tidyverse)
 library(mosaic)
 ```
+  
 
 The 'Excel guru" took out the buildings with very low occupancy rates (so leasing rate) (less than 10%). He seperated green and non green buildings (based on green rating). He looked at market rent (Rent) variable. Notably we see that the guru did not look into cluster rent. He also did not take into account net: indicator for whether the rent is quoted on a "net contract" basis. Net rental meaning pay their own utility costs. These costs are not included in rent. The real estate developer wants to build her project on East Cesar Chavez, across the I-35. $100 million baseline cost plus 5% premium for green certification.  
+  
 ## Problem 1: 
 
 There were a number of things that sounded off about the "Excel guru"'s analysis but first, we wanted to check if there was an unacceptable amount of data lost.
@@ -78,9 +77,5 @@ If we look at the scatterplot for rent and average local market rent.
 ## Problem 2:
 
 You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
