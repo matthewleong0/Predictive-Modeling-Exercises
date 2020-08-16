@@ -1,7 +1,7 @@
 ---
-title: "Problem 1 and 2"
+title: "Problem 1 rough draft."
 author: "Matthew Leong"
-date: "8/11/2020"
+due date: "8/17/2020"
 output: pdf_document
 ---
 
