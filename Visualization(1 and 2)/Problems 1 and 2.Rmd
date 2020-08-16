@@ -12,6 +12,7 @@ library(ggplot2)
 library(knitr)
 library(tidyverse)
 library(mosaic)
+library(ggpubr)
 ```
   
 ## Problem 1: 
@@ -96,6 +97,19 @@ ggplot(data = green_df2) +
 Degree days in this data set are essentially measures of demand for energy where higher values mean greater demand. As this is another energy variable, we would expect to see and do actually see a similar distribution in that green certified buildings have lower rent than standard energy buildings.  
   
 In conclusion, the confounding variable problem invalidates the guru's analysis. When controlling for such variables, we can see evidence that points towards green certified buildings have equal or even lower rent than non green certified ones. We can conclude that going green does not necessarily mean higher rent. TO further verify this conclusion, we recommend a linear regression or some other similar predictive modeling algorithm to control for all the variables and see which ones would actually lead to higher rent. In fact having run the model ourselves, we found that green rating has no significant relationship with rent. Additionally, we would recommend running such a model on the green rating to determine other potential factors that are actually related to green buildings. Regardless, we do not recommend investing in a green building as it does not yield higher rent and has an additional premium attached to it.
+  
+```{r, include = FALSE,echo = FALSE}
+#Some set up for problem 2
+abia_df = read.csv('ABIA.csv')
+
+#Assign a season to each 3 month period.
+abia_df$Season = ifelse(abia_df$Month %in% c(12,1,2),"Winter", #December, January, February are Winter.
+                        ifelse(abia_df$Month %in% c(3,4,5),"Spring", #March,April, May are Spring
+                               ifelse(abia_df$Month %in% c(6,7,8),"Summer", #June, July, August is summer
+                                      "Fall"))) #September,October,November is Fall
+#
+
+```
   
 ## Problem 2:
   
