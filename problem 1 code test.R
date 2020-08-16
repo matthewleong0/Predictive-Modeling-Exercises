@@ -49,13 +49,6 @@ cor(green_df2)
 
 #Let's test out plots with rent and these variables: cluster_rent, electricity_costs, total_dd_07, class_a.
 
-#Scatterplot for rent and cluster rent. (cluster_rent)
-labels <- c("0" = "Standard Energy","1" = "Green Certified")
-ggplot(data = green_df2) + 
-  geom_point(mapping = aes(x = Rent, y = cluster_rent),alpha=0.5) + 
-  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
-  labs(y='Average rent in the local market',title = 'Scatterplot of average market rent vs rent sorted by green certifciation')
-
 #Boxplot for rent and high class buildings (class_a)
 ggplot(data = green_df2) + 
   geom_boxplot(mapping=aes(x=as.factor(class_a), y=Rent)) +
