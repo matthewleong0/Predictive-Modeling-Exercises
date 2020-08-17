@@ -1,0 +1,286 @@
+---
+title: "Problem 5"
+author: "Matthew Leong"
+due date: 8/17/2020
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#Load in various libraries
+library(tm) 
+library(tidyverse)
+library(slam)
+library(proxy)
+library(stringr)
+library(randomForest)
+library(caret)
+```
+
+## Problem 5:
+  
+For this problem, we have data from ReutersC50 stored in a train and test set consisting of 50 authors with 50 documents each making for 2500 documents total in each set. The task at hand was given a document, to predict the author who wrote it. To accomplish this, we first processed and read the train and test list of documents into R using code similar to the tm_examples. Essentially it was an iteration that went through the lists to clean up the document names. During this step, we also created another dataframe for storing the author names for both the training and test set. Afterwards, we set up a corpus to then do some pre-processing using the library(tm) package. We decided to make everything lower case, remove numbers, remove punctuation, remove excess white space, and remove basic english stop words. This resulted in the following train document matrix:
+  
+```{r, echo = FALSE, include = FALSE}
+readerPlain = function(fname){
+  readPlain(elem=list(content=readLines(fname)), 
+            id=fname, language='en') }
+
+#Get the file list.
+#WD may have to be changed.
+file_list = Sys.glob('data/ReutersC50/C50train/*/*.txt')
+
+#Read in author
+author = lapply(file_list, readerPlain)
+
+# Clean up the file names section from tm_examples.
+mynames = file_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  unlist
+
+#Clean up file names section. But remove the numbers+newsML.txt to get author name.
+mynames2 = file_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  str_remove(., "[0-9]+[n][e][w][s][M][L][.][t][x][t]") %>%
+  unlist
+
+#Create two lists to put into a dataframe.
+names_list = list(mynames)
+names_list2 = list(mynames2)
+
+#create a dataframe to reference for classification later
+author_train = do.call(rbind, Map(data.frame, Text_File=names_list, Author=names_list2))
+
+# Rename the articles
+names(author) = mynames
+
+#Create corpus
+documents_raw = Corpus(VectorSource(author))
+
+#Some pre-processing/tokenization steps.
+my_documents = documents_raw %>%
+  tm_map(content_transformer(tolower))  %>%             # make everything lowercase
+  tm_map(content_transformer(removeNumbers)) %>%        # remove numbers
+  tm_map(content_transformer(removePunctuation)) %>%    # remove punctuation
+  tm_map(content_transformer(stripWhitespace))          # remove excess white-space
+
+
+#Decided to just remove the "basic English" stop words
+my_documents = tm_map(my_documents, content_transformer(removeWords), stopwords("en"))
+
+## create a doc-term-matrix from the corpus
+DTM_author_train = DocumentTermMatrix(my_documents)
+```
+```{r}
+DTM_author_train
+```
+  
+As we can see from the summary, the are 32570 terms across all the documents. However, there is a significant portion of those that only occur in 1 or 2 documents. Thus, we decided to cut those words out by removing any terms with a frequency of 0 in greater than 99% of documents.
+  
+```{r,echo=FALSE,include=FALSE}
+#Decide to remove the noise of terms
+#Cut down the term count
+#Remove terms that have count 0 in >99% of the documents.
+DTM_author_train = removeSparseTerms(DTM_author_train, 0.99)
+
+# construct TF IDF weights -- might be useful if we wanted to use these
+# as features in a predictive model
+tfidf_author_train = weightTfIdf(DTM_author_train)
+```
+```{r}
+DTM_author_train
+```
+  
+As seen in the summary, we managed to significantly cut down on the number of terms while also not losing that much sparsity of the matrix. After this process, the test document matrix 
+  
+```{r, echo = FALSE, include = FALSE}
+#Making the test set.
+readerPlain = function(fname){
+  readPlain(elem=list(content=readLines(fname)), 
+            id=fname, language='en') }
+
+test_list = Sys.glob('data/ReutersC50/C50test/*/*.txt')
+
+author_test = lapply(test_list, readerPlain)
+
+# Clean up the file names section from tm_examples.
+mynames_t = test_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  unlist
+
+#Clean up file names section. But remove the numbers+newsML.txt to get author name.
+mynames_t2 = test_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  str_remove(., "[0-9]+[n][e][w][s][M][L][.][t][x][t]") %>%
+  unlist
+
+#Create two lists to put into a dataframe.
+names_listt = list(mynames_t)
+names_listt2 = list(mynames_t2)
+
+#create a dataframe to reference for classification later
+author_test_df = do.call(rbind, Map(data.frame, Text_File=names_listt, Author=names_listt2))
+
+#Rename the articles.
+names(author_test) = mynames_t
+
+#corpus made
+documents_raw2 = Corpus(VectorSource(author_test))
+
+#Some pre-processing/tokenization steps.
+my_documents2 = documents_raw2 %>%
+  tm_map(content_transformer(tolower))  %>%             # make everything lowercase
+  tm_map(content_transformer(removeNumbers)) %>%        # remove numbers
+  tm_map(content_transformer(removePunctuation)) %>%    # remove punctuation
+  tm_map(content_transformer(stripWhitespace))          # remove excess white-space
+
+
+#Decided to just remove the "basic English" stop words
+my_documents2 = tm_map(my_documents2, content_transformer(removeWords), stopwords("en"))
+
+
+## create a doc-term-matrix from the corpus
+DTM_author_test = DocumentTermMatrix(my_documents2)
+```
+```{r}
+DTM_author_test
+```
+  
+One thing that we can already note is that the test set of documents has more terms than the training set which proves to still be the case even after removing 99% of the terms that have 0 occurences in greater than 99% of the documents.
+  
+```{r,echo=FALSE,include=FALSE}
+#Decide to remove the noise of terms over here as well
+#Cut down the term count
+#Remove terms that have count 0 in >99% of the documents.
+DTM_author_test = removeSparseTerms(DTM_author_test, 0.99)
+
+# construct TF IDF weights -- might be useful if we wanted to use these
+# as features in a predictive model
+tfidf_author_test = weightTfIdf(DTM_author_test)
+```
+```{r}
+DTM_author_test
+```
+  
+The test document term matrix also only lost 4% sparsity. Using these document matrices, we also constructed two tfidf_matrices and would base our analysis off of that measurement. However before we could begin our analysis, we had to tackle on how to deal with the term differences in the two documents as well as how to reduce the number of terms so we could make our predictive models. To reduce dimensions, we decided to do principal component analysis but only considered the first 50 PCAs to reduce computational time. We only did PCA on the training tf_idf matrix as the test would differ. To deal with term differences, we decided to only consider the terms that matched when calculating principal components. Additionally, we got rid of any terms that did not have any tf-idf values. 
+```{r,echo=FALSE,include=FALSE}
+####
+# Fixing some train/test split issues.
+####
+
+#Problem that certain terms do not appear in the other.
+#method to fix is to try and match the columns that do happen in both.
+
+#Read in the tf-idf matrix
+X_train = as.matrix(tfidf_author_train)
+
+#Get rid of any columns with 0 values.
+scrub_train = which(colSums(X_train) == 0)
+X_train = X_train[,-scrub_train]
+
+#Do same scrubbing for test set.
+X_test = as.matrix(tfidf_author_test)
+scrub_test = which(colSums(X_test)==0)
+X_test = X_test[,-scrub_test]
+
+#Let's try and now only condsider the columns that are in both.
+train_cols = colnames(X_train)
+test_cols = colnames(X_test)
+
+match = intersect(train_cols,test_cols)
+X_train = X_train[,match]
+X_test = X_test[,match]
+```
+  
+```{r,echo=FALSE,include=FALSE}
+# Now PCA on the cleaned x_train
+#Need to do PCA here because there are way too many columns.
+
+#Do the first 50 principal components.
+pca_author = prcomp(X_train, scale=TRUE, rank=50)
+```
+```{r}
+#Look at the pca.
+summary(pca_author)
+```
+  
+As we can see from the principal component results, the first 50 or so principal components explain about 15% or so of the variation of the original documents. Considering that there were originally 2500 documents, this dimension reduction is rather successful. We then decided to look into the first 5 principal components to determine what they mean. 
+
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,1]),decreasing=TRUE),1][1:25]
+```
+  
+The first principal component seems to weight against any Chinese documents and weights positively towards financial documents. Thus we think this principal component is Chinese vs Finance documents
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,2]),decreasing=TRUE),1][1:25]
+```
+  
+Our second principal component seems to focus on workers rights in the automobile industry. 
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,3]),decreasing=TRUE),1][1:25]
+```
+  
+Our third principal component also deals with the same issue and seems to wieght things very similarly to our second one.
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,4]),decreasing=TRUE),2][1:25]
+```
+  
+Our fourth principal component seems to be dealing with technology news and the Hong Kong protests. It weights tech news positively and the protests negatively. This is most likely a technology vs Hong Kong news type of deal. 
+
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,5]),decreasing=TRUE),2][1:25]
+```
+  
+Again we have a focus on political news especially regarding china. Judging from these 5 principal components, it seems that the best factors to determine author attribution to a document is basically whether they wrote about China or not. We then decided to run these principal components into multiple models including logistic regression, naive bayes, KNN, and a random forest m=5 tree model. To do so, we would combine our principal component analysis matrix with the author names in the training set into a training dataframe. The test dataframe would be constructed from the tf_idf test matrix and the list of authors in the testing set. Using the training dataframe, we would then make our model predicting author attribution based on the principal components. We would then test our model's prediction with the test dataframe and obtain an accuracy score. Out of all our models, the random forest tree model with m=5 performed the best. 
+  
+```{r,echo=FALSE,include=FALSE}
+#Create a train dataframe with the PCAs and author column.
+train_df = as.data.frame(cbind(pca_author$x,Author=author_train$Author))
+
+#Create a test dataframe. Using all the TF-IDF plus author.
+test_df = as.data.frame(cbind(X_test,Author=author_test_df$Author))
+
+
+rf_author = randomForest(as.factor(train_df$Author)~., 
+                       data=train_df, #Use train-value data
+                       mtry=5, #Use 5 predictors
+                       importance =TRUE)
+
+rf_pred = predict(rf_author, data = test_df)
+rf_confusion_matrix = confusionMatrix(table(rf_pred,test_df$Author))
+```
+```{r}
+rf_confusion_matrix$overall
+```
+  
+We used the library(caret) to create the confusion matrix. We found that our overall accuracy with random forests came out to be 73.84% which is better than our other models. 
+```{r}
+importance(rf_author)[,1:4]
+```
+  
+From this snippet of the output of the importance function, we can see that the principal components importance vary across the authors but the first ones tend to be quite important towards predicting authors which makes sense considering those first principal components are the most important factors in the document.
+
+
+
+
+
+
+
+
+
+
+
+
