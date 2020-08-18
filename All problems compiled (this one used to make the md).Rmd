@@ -1,0 +1,1165 @@
+---
+title: "Problem 1-6"
+author: "Matthew Leong, Chirag Ramesh, Grayson Taylor, Paridhi Sheth"
+due date: 8/17/2020
+output: 
+  md_document:
+    variant: markdown_github
+---
+
+# STA380_exercises  
+  
+This github repistory contains our solutions to the predictive modeling part 2 exercises for the MSBA program at UT Austin.  
+  
+# Authors  
+- Matthew Leong  
+- Chirag Ramesh  
+- Grayson Taylor  
+- Paridhi Sheth  
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#Load in various libraries
+library(tm) 
+library(tidyverse)
+library(slam)
+library(proxy)
+library(stringr)
+library(randomForest)
+library(caret)
+library(arules) 
+library(arulesViz)
+library(mosaic)
+library(quantmod)
+library(foreach)
+library(ggstance)
+library(ggplot2)
+library(knitr)
+library(ggpubr)
+```
+  
+## Problem 1: Visual story telling part 1: green buildings  
+  
+There were a number of things that sounded off about the "Excel guru"'s analysis but first, we wanted to check if there was an unacceptable amount of data lost.
+  
+```{r, echo = FALSE}
+#Compare the two lengths to see if the guy dropped too many outliers.
+green_df = read.csv('greenbuildings.csv')
+#Dropped based on lease 
+green_df2 <- subset(green_df, leasing_rate >= 10)
+original_len = dim(green_df)[1]
+new_len = dim(green_df2)[1]
+diff_len = original_len-new_len
+percentage_len = diff_len/original_len*100
+certifiedgreen_df = subset(green_df2, green_rating==1)
+standard_df = subset(green_df2, green_rating==0)
+cat("The original dataset originally had",original_len,"observations.","\n")
+cat("The new cleaned dataset has",new_len,"observations.","\n")
+cat("They differ by",diff_len,"observations ")
+cat("which is a percentage difference of",percentage_len,'percent.\n')
+cat("There are", dim(certifiedgreen_df)[1],'green certified buildings in the data set.\n')
+cat("There are",dim(standard_df)[1],'non green certified buildings in the data set.')
+```
+  
+After running some code really quickly, we can see that the guru lost about 2.72% of the data which is honestly an acceptable amount. As such, we will also be using this subset of the data for our plots. However, the guru's analysis falls apart because he forgot to consider other variables. To demonstrate this issue, let's look at the box plot obtained when the other variables are not considered.
+  
+```{r, echo = FALSE}
+#Box plot
+ggplot(data=green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(green_rating), y=Rent)) +
+  scale_x_discrete(labels = c('Standard Energy','Green Certified')) +
+  labs(x='Building Status',title='Boxplot of Rent vs Certification Status') + 
+  coord_flip()
+```
+  
+The box plot demonstrates the distribution of the split that the guru did. As we can see from the box plot, rent does not seem to differ that much between green certified and standard energy. However, the guru ignores this overall distribution in favor of focusing on the median. The median here is misleading as while it is higher on this distribution, it will not necessarily hold true when we add in additional factors. For instance, let us see what would happen when we add in whether or not a building is high quality. 
+    
+```{r, echo = FALSE}
+#Boxplot for rent and high class buildings
+ggplot(data = green_df2) + 
+  geom_boxplot(mapping=aes(x=as.factor(class_a), y=Rent)) +
+  scale_x_discrete(labels = c('Medium/Low Quality','High Quality')) + 
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Highest Quality Buildings',y='Rent',title = 'Boxplot of Rent based on quality of the building and green certification') +
+  coord_flip()
+```
+  
+Naturally, as one would expect, high class buildings have a higher rent associated with them. If we go with the median standard, we can see that although green certified medium/low quality buildings have a higher rent, standard energy (non certified green buildings) and green certified high class buildings have about the same median rent. So this begs the question of why rent is suddenly the same. The answer is that this is a confounding variable problem which is basically how another variable like high class status affects rent and green certification status. This is not the only confounding variable. 
+  
+```{r}
+#Scatterplot for rent and cluster rent.
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) + 
+  geom_point(mapping = aes(x = cluster_rent, y = Rent),alpha=0.5) + 
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Average rent in the local market',title = 'Scatterplot of average local market rent vs rent sorted by green certification')
+```
+  
+Another such confounding variable left out by the guru is the average rent in the local market. This variable has a key relationship with rent charged in that they essentially deal with the same thing. If green certified buildings netted a higher rent, this would be reflected in the graph when controlling for average rent in the local market. However according to the graph, it seems that green certified buildings perform worse but are more consistent overall which can be explained by the fact that there are a lot fewer green certified buildings than non green certified buildings. Additionally, the distributions are fairly similar implying that green certification does not actually affect the rent price. To further support this case, let's look at a couple more potential confounding variables and see if the distributions differ.
+  
+```{r}
+#Electricity
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) +
+  geom_point(mapping = aes(x = Electricity_Costs, y = Rent),alpha=0.5) +
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Electricity cost in local markets',title = 'Rent vs Electricity cost based on green certification')
+```
+  
+Again, when controlling for electricity costs, we can see that the distributions do not differ significantly further implying that rent and green certification are unrelated. In fact when looking at the distribution, the rent appears to be lower in the green certified buildings. One possible explanation for this phenomenon is that green buildings have lower fixed costs than standard energy buildings which allow them to charge less rent based on energy usage. This odd phenomenon is also reflected in another energy measurement variable.
+  
+```{r}
+#total_dd_07
+labels <- c("0" = "Standard Energy","1" = "Green Certified")
+ggplot(data = green_df2) +
+  geom_point(mapping = aes(x = total_dd_07, y = Rent),alpha=0.5) +
+  facet_wrap(~ green_rating,labeller=labeller(green_rating = labels), nrow = 2) +
+  labs(x='Degree Days ',title = 'Rent vs Degree Days based on green certification')
+```
+  
+Degree days in this data set are essentially measures of demand for energy where higher values mean greater demand. As this is another energy variable, we would expect to see and do actually see a similar distribution in that green certified buildings have lower rent than standard energy buildings.  
+  
+In conclusion, the confounding variable problem invalidates the guru's analysis. When controlling for such variables, we can see evidence that points towards green certified buildings have equal or even lower rent than non green certified ones. We can conclude that going green does not necessarily mean higher rent. TO further verify this conclusion, we recommend a linear regression or some other similar predictive modeling algorithm to control for all the variables and see which ones would actually lead to higher rent. In fact having run the model ourselves, we found that green rating has no significant relationship with rent. Additionally, we would recommend running such a model on the green rating to determine other potential factors that are actually related to green buildings. Regardless, we do not recommend investing in a green building as it does not yield higher rent and has an additional premium attached to it.
+  
+## Problem 2: Visual story telling part 2: flights at ABIA  
+
+```{r include = FALSE, echo=FALSE}
+abia_df = read.csv('ABIA.csv')
+colnames(abia_df)
+dim(abia_df)
+```
+  
+In general, we decided to let our visualizations do the talking and keep analysis to a minimum for this problem. Our theme is to look at differences between each season for flights in and out of Austin.  
+  
+```{r include = FALSE, echo=FALSE}
+#Assign a season to each 3 month period.
+abia_df$Season = ifelse(abia_df$Month %in% c(12,1,2),"Winter", #December, January, February are Winter.
+                        ifelse(abia_df$Month %in% c(3,4,5),"Spring", #March,April, May are Spring
+                               ifelse(abia_df$Month %in% c(6,7,8),"Summer", #June, July, August is summer
+                                      "Fall"))) #September,October,November is Fall
+```
+
+  
+In our initial analysis we decided to take a look at seasons and see if we can find any significant findings with various variables using seasons as a parameter. We begin by plotting flight distance by season.
+  
+```{r include = FALSE, echo=FALSE}
+#Density plot for distance.
+ggplot(data = abia_df, aes(x=Distance)) + geom_density(aes(fill=factor(Season)),alpha = 1) +
+  scale_color_manual(values =c('Winter' ='blue','Fall'='orange',"Summer"='Yellow','Spring'='Green')) +
+  facet_wrap(~ Season,nrow =2,ncol=2) +
+  labs(title="Density plot", 
+       subtitle="Season vs Distance of abia_df",
+       caption="Source: abia.csv",
+       x="Distance (miles)",
+       fill="Season")
+```
+
+  
+Summer has the longest distance flights followed by fall, spring and winter. In our z-score graph you can see this difference magnified.
+  
+
+```{r include = FALSE, echo=FALSE}
+#Bar plot of average distance+z score of distance
+
+# Calculate average distance
+abia_summ = abia_df %>%
+  group_by(Season)  %>%  # group the data points by season
+  summarize(Distance.mean = mean(Distance))  # calculate a mean for each Season
+
+# reorder the x labels and create a variable to store the plot
+avg = ggplot(abia_summ, aes(x=reorder(Season, Distance.mean), y=Distance.mean, fill = Season)) + 
+  geom_bar(stat='identity') +
+  labs(title="Bar Plot", 
+       subtitle="Season vs Average Distance of abia_df",
+       caption="Source: abia.csv",
+       y="Average Distance (miles)",
+       x = "Season",
+       fill="Season")
+
+# Create a plot for z-scores as well
+# Use mutate function to change to add a z-score column
+abia_summ = mutate(abia_summ, Distance.z = (Distance.mean - mean(Distance.mean))/sd(Distance.mean))
+
+# now plot the newly defined variable
+z_scores = ggplot(abia_summ, aes(x=reorder(Season, Distance.z), y=Distance.z, fill = Season)) + 
+  geom_bar(stat='identity') +
+  labs(title="Bar Plot", 
+       subtitle="Season vs Distance of abia_df (z-score)",
+       caption="Source: abia.csv",
+       y="Distance (z-score)",
+       x = "Season",
+       fill="Season")
+
+figure <- ggarrange(avg, z_scores, nrow = 2)
+
+figure
+```
+
+  
+
+```{r include = FALSE, echo=FALSE}
+#Flight cancellations codes by season
+canceled_flights = subset(abia_df, CancellationCode != '')
+ggplot(data = canceled_flights, mapping = aes(x = as.factor(CancellationCode))) +
+  geom_bar(aes(fill=Season)) +
+  facet_wrap(~ Season,nrow =2,ncol=2) +
+  labs(title="Bar Plot",
+       subtitle="Cancellation reasons for each season",
+       caption="Source: abia.csv",
+       y="Count",
+       x = "Season",
+       fill="Season")
+```
+
+CancellationCode reason for cancellation (A = carrier, B = weather, C = NAS, D = security). No cancellations due to security in our data set. Spring has most cancellations overall and the most due to weather which is surprising considering winter would be expected to have the harshest weather.
+```{r}
+#Total flights by carrier
+plot1 <- ggplot(aes(x=UniqueCarrier), data=abia_df) +
+  geom_bar(fill="SteelBlue", position='dodge') +
+  labs(title="Total Flights by Carrier", 
+       caption="Source: abia.csv",
+       y="Total Flights",
+       x = "Airline Carrier")
+
+print(plot1)
+
+
+```
+
+WN (Southwest Airlines) and AA (American Airlines) are notably the most popular airlines out of Austin airport. 
+
+```{r include = FALSE, echo=FALSE}
+#Flights cancelled by carrier
+ggplot(abia_df, aes(x=UniqueCarrier, y=Cancelled)) + geom_bar(stat='identity', color="SteelBlue") +
+  labs(title="Cancellations by Carrier", 
+       caption="Source: abia.csv",
+       y="Cancelled",
+       x = "Airline Carrier")
+```
+
+WN (Southwest Airlines), AA (American Airlines), and MQ (Envoy Air) are the most frequently canceled airlines out of Austin airport. AA flights and MQ flights are disproportionately cancelled more relative to WN.
+
+```{r include = FALSE, echo=FALSE}
+#Total flights by carrier by season
+plot1 <- ggplot(aes(x=UniqueCarrier, fill=Season), data=abia_df) +
+  geom_bar(position='dodge') +
+  facet_wrap(~ Season,nrow =2,ncol=2) +
+  labs(title="Total Flights by Carrier", 
+       subtitle ="Across all seasons",
+       caption="Source: abia.csv",
+       y="Total Flights",
+       x = "Airline Carrier",
+       fill = "Season")
+
+
+
+print(plot1)
+```
+
+
+
+```{r include = FALSE, echo=FALSE}
+#Total Cancellations by Carrier by season
+ggplot(abia_df, aes(x=UniqueCarrier, y=Cancelled, fill=Season)) + geom_bar(stat='identity') +
+  facet_wrap(~ Season,nrow =2,ncol=2) +
+  labs(title="Cancellations by Carrier",
+       subtitle = "Across all seasons",
+       caption="Source: abia.csv",
+       y="Flights Cancelled",
+       x = "Airline Carrier")
+```
+
+  
+## Problem 3: Portfolio modeling
+  
+*The exchange-traded funds (ETFs) was selected considering portfolios that are different from each other. In total, we have selected 6 ETFs - "QQQ","EPV","AOR","SVXY","YYY" and SPY". We have considered 5 years of ETF data starting from 01-Jan-2014. The ETFs range from QQQ trust being one of the largest, owning only non-financial stocks to EPV which is a low performing ETF to AQR being a very diverse ETF to SVXY being a high risk ETF because the performance is dependent on the market volatility rather than security to YYY being an amplified high income ETF and lastly, SPY being one of the safest and largest ETFs. 
+
+```{r echo=FALSE}
+# Import a few stocks
+mystocks = c("SPY", "SVXY", "QQQ", "YYY","IWF")
+getSymbols(mystocks)
+
+# Adjust for splits and dividends
+SPYa = adjustOHLC(SPY)
+SVXYa = adjustOHLC(SVXY)
+QQQa = adjustOHLC(QQQ)
+YYYa = adjustOHLC(YYY)
+IWFa = adjustOHLC(IWF)
+
+
+# Look at close-to-close changes
+plot(ClCl(SPYa))
+plot(ClCl(SVXYa))
+plot(ClCl(QQQa))
+plot(ClCl(YYYa))
+plot(ClCl(IWFa))
+
+
+# Combine close to close changes in a single matrix
+all_returns = cbind(ClCl(SPYa),ClCl(SVXYa),ClCl(QQQa),ClCl(YYYa),ClCl(IWFa))
+head(all_returns)
+
+# first row is NA because before data was not considered
+all_returns = as.matrix(na.omit(all_returns))
+N = nrow(all_returns)
+
+# These returns can be viewed as draws from the joint distribution: strong correlation, but not Gaussian
+pairs(all_returns)
+plot(all_returns[,1], type='l')
+
+# Look at the market returns over time
+plot(all_returns[,3], type='l')
+
+# Look if today's returns are correlated with tomorrow
+plot(all_returns[1:(N-1),3], all_returns[2:N,3])
+
+# An autocorrelation plot
+acf(all_returns[,3])
+
+# Conclusion: returns uncorrelated from one day to the next
+```
+The starting wealth value is $100,000.  
+  
+Portfolio 1: Modeling a safe portfolio  
+  
+ETFs used: "SPY" , "QQQ", "AOR"  
+  
+```{r, echo=FALSE}
+
+##Bootstrap resampling approach with additional stocks
+
+mystocks = c("SPY", "SVXY","QQQ","YYY","EPV", "AOR")
+myprices = getSymbols(mystocks, from = "2014-01-01")
+
+
+# A chunk of code for adjusting all stocks creates a new object adding 'a' to the end. Ex: SPY becomes SPYa, etc.
+for(ticker in mystocks) {
+  expr = paste0(ticker, "a = adjustOHLC(", ticker, ")")
+  eval(parse(text=expr))
+}
+
+head(SPYa)
+
+# Combine all the returns in a matrix
+all_returns = cbind(	ClCl(SPYa),
+                     ClCl(SVXYa),
+                     ClCl(QQQa),
+                     ClCl(YYYa),
+                     ClCl(EPVa),
+                      ClCl(AORa))
+              
+head(all_returns)
+all_returns = as.matrix(na.omit(all_returns))
+
+# Compute the returns from the closing prices
+pairs(all_returns)
+
+# Sample a random return from the empirical joint distribution
+return.today = resample(all_returns, 1, orig.ids=FALSE) 
+
+initial_wealth = 100000
+
+sim1 = foreach(i=1:5000, .combine = rbind) %do% {
+  weights = c(0.4, 0.03, 0.3, 0.03, 0.02, 0.3)
+  total_wealth = initial_wealth
+  holdings = total_wealth * weights
+  n_days = 20
+  wealthtracker = rep(0, n_days)
+  
+  for(today in 1:n_days){
+    return_today = resample(all_returns, 1, orig.ids=FALSE)
+    holdings = holdings * (1 + return_today)
+    total_wealth = sum(holdings)
+    wealthtracker[today] = total_wealth
+    
+# Rebalancing
+holdings = total_wealth * weights
+  }
+  
+  wealthtracker
+}
+head(sim1)
+hist(sim1[,n_days], 50)
+plot(density(sim1[,n_days]))
+
+# Profit/loss
+hist(sim1[,n_days]- initial_wealth, breaks=30)
+conf_5Per = confint(sim1[,n_days]- initial_wealth, level = 0.90)$'5%'
+cat('\nAverage return of investement after 20 days', mean(sim1[,n_days]), "\n")
+cat('\n5% Value at Risk for safe portfolio-',conf_5Per, "\n")
+```
+  
+```{r, echo=FALSE, include=FALSE}
+wealth_daywise = c()
+  
+for (i in 1:n_days){
+    wealth_daywise[i] = mean(sim1[,i]) 
+}
+days = 1:n_days
+df = data.frame(wealth_daywise, days)
+```
+  
+
+```{r, echo=FALSE}
+ggplot(data=df, aes(x=days, y=wealth_daywise, group=1)) +
+  geom_line(color="blue")+
+  geom_point() +
+  xlab('Trading Days') +
+  ylab('Return on Investments') + 
+  ggtitle('Safe Portfolio: Returns over 20 days')
+```
+  
+
+
+```{r, echo=FALSE}
+hist(sim1[,n_days], 50)
+plot(density(sim1[,n_days]))
+hist(sim1[,n_days]- initial_wealth, breaks=30)
+conf_5Per = confint(sim1[,n_days]- initial_wealth, level = 0.90)$'5%'
+print(cat('\nAverage return on investement after 20 days', mean(sim1[,n_days]), "\n"))
+cat('\n5% Value at Risk for safe portfolio-',conf_5Per, "\n")
+
+
+
+```
+  
+* Portfolio 2: High Risk Model  
+  
+Using ETFs: SVXY, YYY, IWF  
+  
+Distributed 90% of the total wealth among the low performing ETFs  
+  
+```{r, echo=FALSE, include=FALSE}
+sim2 = foreach(i=1:5000, .combine = rbind) %do% {
+  weights = c(0.01, 0.3, 0.03, 0.03, 0.4, 0.3)
+  total_wealth = initial_wealth
+  holdings = total_wealth * weights
+  n_days = 20
+  wealthtracker = rep(0, n_days)
+  
+  for(today in 1:n_days){
+    
+    return_today = resample(all_returns, 1, orig.ids=FALSE)
+    holdings = holdings * (1 + return_today)
+    total_wealth = sum(holdings)
+    wealthtracker[today] = total_wealth
+    
+# Rebalancing
+holdings = total_wealth * weights
+  }
+  
+  wealthtracker
+}
+head(sim2)
+hist(sim2[,n_days], 50)
+plot(density(sim2[,n_days]))
+# Profit/loss
+hist(sim2[,n_days]- initial_wealth, breaks=30)
+hist(sim2[,n_days]- initial_wealth, breaks=30)
+conf_5Per = confint(sim2[,n_days]- initial_wealth, level = 0.90)$'5%'
+cat('\nAverage return of investement after 20 days', mean(sim2[,n_days]), "\n")
+cat('\n5% Value at Risk for High portfolio-',conf_5Per, "\n")
+```
+
+  
+```{r, echo=FALSE, include=FALSE}
+wealth_daywise = c()
+  
+for (i in 1:n_days){
+    wealth_daywise[i] = mean(sim2[,i]) 
+}
+days = 1:n_days
+df = data.frame(wealth_daywise, days)
+```
+
+  
+```{r, echo=FALSE}
+ggplot(data=df, aes(x=days, y=wealth_daywise, group=1)) +
+  geom_line(color="blue")+
+  geom_point() +
+  xlab('Trading Days') +
+  ylab('Return on Investments') + 
+  ggtitle('High Risk Portfolio: Returns over 20 days')
+```
+  
+```{r, echo=FALSE}
+hist(sim2[,n_days], 50)
+plot(density(sim2[,n_days]))
+# Profit/loss
+hist(sim2[,n_days]- initial_wealth, breaks=30)
+conf_5Per = confint(sim2[,n_days]- initial_wealth, level = 0.90)$'5%'
+cat('\nAverage return on investement after 20 days', mean(sim2[,n_days]), "\n")
+cat('\n5% Value at Risk for High portfolio-',conf_5Per, "\n")
+```
+  
+*Portfolio 3: Using equal weights for all ETFs  
+  
+```{r, echo=FALSE, include=FALSE}
+sim3 = foreach(i=1:5000, .combine = rbind) %do% {
+  weights = c(0.12, 0.12, 0.12, 0.12, 0.12, 0.12)
+  total_wealth = initial_wealth
+  holdings = total_wealth * weights
+  n_days = 20
+  wealthtracker = rep(0, n_days)
+  
+  for(today in 1:n_days){
+    
+    return_today = resample(all_returns, 1, orig.ids=FALSE)
+    holdings = holdings * (1 + return_today)
+    total_wealth = sum(holdings)
+    wealthtracker[today] = total_wealth
+    
+# Rebalancing
+holdings = total_wealth * weights
+  }
+  
+  wealthtracker
+}
+head(sim3)
+```
+  
+```{r, echo=FALSE}
+hist(sim3[,n_days], 50)
+plot(density(sim3[,n_days]))
+# Profit/loss
+hist(sim3[,n_days]- initial_wealth, breaks=30)
+conf_5Per = confint(sim3[,n_days]- initial_wealth, level = 0.90)$'5%'
+cat('\nAverage return on investement after 20 days', mean(sim3[,n_days]), "\n")
+cat('\n5% Value at Risk for High portfolio-',conf_5Per, "\n")
+```
+  
+```{r, echo=FALSE, include=FALSE}
+wealth_daywise = c()
+for (i in 1:n_days){
+    wealth_daywise[i] = mean(sim3[,i]) 
+}
+days = 1:n_days
+df = data.frame(wealth_daywise, days)
+```
+  
+```{r, echo=FALSE}
+ggplot(data=df, aes(x=days, y=wealth_daywise, group=1)) +
+  geom_line(color="blue")+
+  geom_point() +
+  xlab('Days') +
+  ylab('Return on investments') + 
+  ggtitle('Diverse Portfolio: Returns over 20 days')
+```
+  
+# Write a report summarizing your portfolios and your VaR findings.
+  
+Portfolio 1: Modeling a safe portfolio  
+average return on investment: 470509.6  
+5% VaR value of 337695.5  
+  
+Portfolio 2: High Risk portfolio  
+average return on investment: 387633  
+5% VaR value of 260963.1  
+  
+Portfolio 3: Diverse portfolio  
+average return on investment:141.0608  
+5% VaR value of (-99868.85 )  
+  
+According to the value above, the average return on investment of the safe portfolio yielded the highest return of 470509.6. The high risk portfolio yieleded the next highest return of 387633 and portfolio 3, the diverse portfolio yielded the lowest return of 141.0608. The 3rd portfolio was given equal weights for all EFTs to compare the returns over the time period. From using the bootstrap approach the above conclusions can be made. But, for Portfolio 3 the 5% VaR is negative at 99868.85 meaning that the portfolio has a high probability of making a profit. For example a one-day 5% VaR of negative 99868.85 implies the portfolio has a 95% chance of making more than 99868.85 over the next day. 
+  
+## Problem 4: Market Segmentation
+  
+```{r include = FALSE}
+library(ggplot2)
+library(tidyverse)
+```
+  
+We begin by briefly looking at the data set, looking at the frequency of the each of the column categories.  
+```{r echo = F}
+marketing_df = read.csv('social_marketing.csv')
+```
+  
+```{r echo = F}
+colnames(marketing_df)
+xxx = marketing_df[,-1]
+#barplot(xxx)
+x_vector<-colSums(xxx)
+x_vector<-sort(x_vector, decreasing = TRUE)
+barplot(x_vector, las=2)
+```
+  
+Chatter is the largest category, however it is going to be hard to make conclusions  based off that category. Photosharing and nutrition are the next most popular column categories. Followed by cooking, politcs and sports_fandom.  
+  
+```{r echo = F}
+library(corrplot)
+X = marketing_df[,-1]
+rownames(marketing_df) <- marketing_df$User
+correlation <- cor(X)
+corrplot(correlation, method = "square")
+```
+  
+We can then determine which column categories are most correlated by running a corrplot, the darker the square the more highly correlated the categories.  
+  
+The following categories are some of the most highly correlated according to our corr plot: college_uni and online_gaming, health_nutrition and personal_fitness, fashion and cooking, beauty and cooking, and somewhat surprisingly travel and politics.  
+  
+To further investigate market segments past two dimensional correlation we will now use K-means clustering. K-means clustering will provide us additonal info on which categories are correlated and tweeted together.  
+  
+```{r include=FALSE, ECHO=FALSE}
+library(LICORS) 
+library(foreach)
+library(mosaic)
+```
+  
+```{r echo = F}
+X = scale(X, center=TRUE, scale=TRUE)
+
+mu = attr(X,"scaled:center")
+sigma = attr(X,"scaled:scale") 
+```
+  
+  
+```{r echo = F}
+num_cent <- c(2:18)
+rmse_all <- NULL
+for(num_center in num_cent){
+  cluster <- kmeans(X, centers = num_center, nstart = 50, iter.max = 20)
+  rmse <- sqrt(mean(cluster$withinss))
+  rmse_all <- c(rmse_all, rmse)
+}
+plot(num_cent, rmse_all, type = 'b',
+     xlab = "Number of Centers", ylab = "RMSE", main = "RMSE vs Number of Clusters")
+```
+  
+  
+We decide to go with K=5 for our clusters based off our elbow model and intuition on the data set.  
+```{r echo = F}
+clust1 = kmeans(X, 5, nstart=25)
+```
+  
+Cluster one:  
+  
+```{r echo = F}
+
+head(sort((clust1$center[1,]*sigma + mu), decreasing=TRUE))
+```
+  
+Cluster Two:  
+  
+```{r echo = F}
+
+head(sort((clust1$center[2,]*sigma + mu), decreasing=TRUE))
+```
+  
+Cluster Three:  
+  
+```{r echo = F}
+
+head(sort((clust1$center[3,]*sigma + mu), decreasing=TRUE))
+```
+  
+Cluster Four:  
+  
+```{r echo = F}
+
+head(sort((clust1$center[4,]*sigma + mu), decreasing=TRUE))
+```
+  
+Cluster Five:  
+  
+```{r echo = F}
+
+head(sort((clust1$center[5,]*sigma + mu), decreasing=TRUE))
+```
+  
+## Cluster Analysis:  
+  
+Cluster One: Can be classified as an older family oriented and information seeking segment. I would recommend the company to advertise sporting events as well as family friendly content. Cooking recipes and family based products would do well targetting this cluster.  
+  
+Cluster Two: Is also likely to be an older age group. They show even more interest in being informed than cluster one. They show an strong predilection to politics,  political mechanize would be popular in this cluster.  
+  
+Cluster Three: Can be easily classified as a health and fitness segment. They could be marketed with diets, gyms, healthy eating and more.  
+  
+Cluster Four: Does not provide the most significant findings. There is interest on sharing, college, and current events. This is likely a college aged demographic that has interest in being informed. News companies like WSJ or younger based news companies could advertise effectively in this segment.  
+  
+Cluster Five: Is  likely female majority cluster but more focused on sharing products rather than information. They would likely be a better marketing target than cluster four for most products. Cooking or meal subscriptions with photo would be an excellent way to target this segment. Photo sharing advertising media is highly encouraged for this market segment especially cooking related.  
+  
+  
+## PCA Analysis  
+  
+In order to look for additional market segments we decided to try PCA. We decided to discard spam and uncategorized for PCA. We normalized the data before running PCA as well.  
+  
+```{r echo = F}
+discard<-c('spam','uncategorized')
+marketing_df = marketing_df[,!names(marketing_df)%in%discard]
+
+df = marketing_df
+rownames(df) <- marketing_df$X
+df$X <- NULL
+
+Z = df/rowSums(df)
+pca_m = prcomp(Z, scale=TRUE)
+summary(pca_m)
+```
+  
+Looking at the summary we can see that 34 PCs summarized the whole data set.  
+  
+After looking through our principle component we picked out principal components PCA1,PCA3,PCA4,PCA5,PCA9,PCA10..  
+  
+```{r echo = F}
+loadings = pca_m$rotation
+scores = pca_m$x
+
+#Recreation vs obligation. It seems. Sports fandom is weird but can be considered to be a classification.
+loadings[order(abs(loadings[,1]),decreasing=TRUE),1][1:25]
+```
+  
+This segment is strongly not-religious and sport oriented with interest on sharing cooking and fashion. This is most likely a very young age group with majority female.  
+```{r echo = F}
+#Politics+health vs recreation. Men vs women interests perhaps?
+loadings[order(abs(loadings[,3]),decreasing=TRUE),3][1:25]
+```
+  
+This segment has a focus on health and recreation. It looks to be female dominated as well.  
+  
+```{r echo = F}
+#Recreation+college vs fashion.
+loadings[order(abs(loadings[,4]),decreasing=TRUE),4][1:25]
+```
+  
+This segment consists of young college students with strong interest in sports, gaming and tv/film.  
+  
+```{r echo = F}
+loadings[order(abs(loadings[,5]),decreasing=TRUE),5][1:25]
+```
+  
+  
+```{r echo = F}
+#Adult is really high here. So is eco. Could be dealing with 
+loadings[order(abs(loadings[,9]),decreasing=TRUE),9][1:25]
+```
+  
+This also appears to be a female dominated segment with interest in art, school and crafts. The negative eco value and relatively high business value leads us believe hypothesize this is an older age group of women.  
+  
+```{r echo = F}
+#Music industry and factors that go well with music vs competitors.
+loadings[order(abs(loadings[,10]),decreasing=TRUE),10][1:25]
+```
+  
+This is an arts and crafts dominated segment. Interest in gaming lead us to conclude this is a gender mixed segment and relatively young.  
+  
+## Problem 5: Author attribution
+  
+For this problem, we have data from ReutersC50 stored in a train and test set consisting of 50 authors with 50 documents each making for 2500 documents total in each set. The task at hand was given a document, to predict the author who wrote it. To accomplish this, we first processed and read the train and test list of documents into R using code similar to the tm_examples. Essentially it was an iteration that went through the lists to clean up the document names. During this step, we also created another dataframe for storing the author names for both the training and test set. Afterwards, we set up a corpus to then do some pre-processing using the library(tm) package. We decided to make everything lower case, remove numbers, remove punctuation, remove excess white space, and remove basic english stop words. This resulted in the following train document matrix:
+  
+```{r, echo = FALSE, include = FALSE}
+readerPlain = function(fname){
+  readPlain(elem=list(content=readLines(fname)), 
+            id=fname, language='en') }
+
+#Get the file list.
+#WD may have to be changed.
+file_list = Sys.glob('data/ReutersC50/C50train/*/*.txt')
+
+#Read in author
+author = lapply(file_list, readerPlain)
+
+# Clean up the file names section from tm_examples.
+mynames = file_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  unlist
+
+#Clean up file names section. But remove the numbers+newsML.txt to get author name.
+mynames2 = file_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  str_remove(., "[0-9]+[n][e][w][s][M][L][.][t][x][t]") %>%
+  unlist
+
+#Create two lists to put into a dataframe.
+names_list = list(mynames)
+names_list2 = list(mynames2)
+
+#create a dataframe to reference for classification later
+author_train = do.call(rbind, Map(data.frame, Text_File=names_list, Author=names_list2))
+
+# Rename the articles
+names(author) = mynames
+
+#Create corpus
+documents_raw = Corpus(VectorSource(author))
+
+#Some pre-processing/tokenization steps.
+my_documents = documents_raw %>%
+  tm_map(content_transformer(tolower))  %>%             # make everything lowercase
+  tm_map(content_transformer(removeNumbers)) %>%        # remove numbers
+  tm_map(content_transformer(removePunctuation)) %>%    # remove punctuation
+  tm_map(content_transformer(stripWhitespace))          # remove excess white-space
+
+
+#Decided to just remove the "basic English" stop words
+my_documents = tm_map(my_documents, content_transformer(removeWords), stopwords("en"))
+
+## create a doc-term-matrix from the corpus
+DTM_author_train = DocumentTermMatrix(my_documents)
+```
+```{r}
+DTM_author_train
+```
+  
+As we can see from the summary, the are 32570 terms across all the documents. However, there is a significant portion of those that only occur in 1 or 2 documents. Thus, we decided to cut those words out by removing any terms with a frequency of 0 in greater than 99% of documents.
+  
+```{r,echo=FALSE,include=FALSE}
+#Decide to remove the noise of terms
+#Cut down the term count
+#Remove terms that have count 0 in >99% of the documents.
+DTM_author_train = removeSparseTerms(DTM_author_train, 0.99)
+
+# construct TF IDF weights -- might be useful if we wanted to use these
+# as features in a predictive model
+tfidf_author_train = weightTfIdf(DTM_author_train)
+```
+```{r}
+DTM_author_train
+```
+  
+As seen in the summary, we managed to significantly cut down on the number of terms while also not losing that much sparsity of the matrix. After this process, the test document matrix 
+  
+```{r, echo = FALSE, include = FALSE}
+#Making the test set.
+readerPlain = function(fname){
+  readPlain(elem=list(content=readLines(fname)), 
+            id=fname, language='en') }
+
+test_list = Sys.glob('data/ReutersC50/C50test/*/*.txt')
+
+author_test = lapply(test_list, readerPlain)
+
+# Clean up the file names section from tm_examples.
+mynames_t = test_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  unlist
+
+#Clean up file names section. But remove the numbers+newsML.txt to get author name.
+mynames_t2 = test_list %>%
+  { strsplit(., '/', fixed=TRUE) } %>%
+  { lapply(., tail, n=2) } %>%
+  { lapply(., paste0, collapse = '') } %>%
+  str_remove(., "[0-9]+[n][e][w][s][M][L][.][t][x][t]") %>%
+  unlist
+
+#Create two lists to put into a dataframe.
+names_listt = list(mynames_t)
+names_listt2 = list(mynames_t2)
+
+#create a dataframe to reference for classification later
+author_test_df = do.call(rbind, Map(data.frame, Text_File=names_listt, Author=names_listt2))
+
+#Rename the articles.
+names(author_test) = mynames_t
+
+#corpus made
+documents_raw2 = Corpus(VectorSource(author_test))
+
+#Some pre-processing/tokenization steps.
+my_documents2 = documents_raw2 %>%
+  tm_map(content_transformer(tolower))  %>%             # make everything lowercase
+  tm_map(content_transformer(removeNumbers)) %>%        # remove numbers
+  tm_map(content_transformer(removePunctuation)) %>%    # remove punctuation
+  tm_map(content_transformer(stripWhitespace))          # remove excess white-space
+
+
+#Decided to just remove the "basic English" stop words
+my_documents2 = tm_map(my_documents2, content_transformer(removeWords), stopwords("en"))
+
+
+## create a doc-term-matrix from the corpus
+DTM_author_test = DocumentTermMatrix(my_documents2)
+```
+```{r}
+DTM_author_test
+```
+  
+One thing that we can already note is that the test set of documents has more terms than the training set which proves to still be the case even after removing 99% of the terms that have 0 occurences in greater than 99% of the documents.
+  
+```{r,echo=FALSE,include=FALSE}
+#Decide to remove the noise of terms over here as well
+#Cut down the term count
+#Remove terms that have count 0 in >99% of the documents.
+DTM_author_test = removeSparseTerms(DTM_author_test, 0.99)
+
+# construct TF IDF weights -- might be useful if we wanted to use these
+# as features in a predictive model
+tfidf_author_test = weightTfIdf(DTM_author_test)
+```
+```{r}
+DTM_author_test
+```
+  
+The test document term matrix also only lost 4% sparsity. Using these document matrices, we also constructed two tfidf_matrices and would base our analysis off of that measurement. However before we could begin our analysis, we had to tackle on how to deal with the term differences in the two documents as well as how to reduce the number of terms so we could make our predictive models. To reduce dimensions, we decided to do principal component analysis but only considered the first 50 PCAs to reduce computational time. We only did PCA on the training tf_idf matrix as the test would differ. To deal with term differences, we decided to only consider the terms that matched when calculating principal components. Additionally, we got rid of any terms that did not have any tf-idf values. 
+```{r,echo=FALSE,include=FALSE}
+####
+# Fixing some train/test split issues.
+####
+
+#Problem that certain terms do not appear in the other.
+#method to fix is to try and match the columns that do happen in both.
+
+#Read in the tf-idf matrix
+X_train = as.matrix(tfidf_author_train)
+
+#Get rid of any columns with 0 values.
+scrub_train = which(colSums(X_train) == 0)
+X_train = X_train[,-scrub_train]
+
+#Do same scrubbing for test set.
+X_test = as.matrix(tfidf_author_test)
+scrub_test = which(colSums(X_test)==0)
+X_test = X_test[,-scrub_test]
+
+#Let's try and now only condsider the columns that are in both.
+train_cols = colnames(X_train)
+test_cols = colnames(X_test)
+
+match = intersect(train_cols,test_cols)
+X_train = X_train[,match]
+X_test = X_test[,match]
+```
+  
+```{r,echo=FALSE,include=FALSE}
+# Now PCA on the cleaned x_train
+#Need to do PCA here because there are way too many columns.
+
+#Do the first 50 principal components.
+pca_author = prcomp(X_train, scale=TRUE, rank=50)
+```
+```{r}
+#Look at the pca.
+summary(pca_author)
+```
+  
+As we can see from the principal component results, the first 50 or so principal components explain about 15% or so of the variation of the original documents. Considering that there were originally 2500 documents, this dimension reduction is rather successful. We then decided to look into the first 5 principal components to determine what they mean. 
+
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,1]),decreasing=TRUE),1][1:25]
+```
+  
+The first principal component seems to weight against any Chinese documents and weights positively towards financial documents. Thus we think this principal component is Chinese vs Finance documents
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,2]),decreasing=TRUE),1][1:25]
+```
+  
+Our second principal component seems to focus on workers rights in the automobile industry. 
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,3]),decreasing=TRUE),1][1:25]
+```
+  
+Our third principal component also deals with the same issue and seems to wieght things very similarly to our second one.
+  
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,4]),decreasing=TRUE),2][1:25]
+```
+  
+Our fourth principal component seems to be dealing with technology news and the Hong Kong protests. It weights tech news positively and the protests negatively. This is most likely a technology vs Hong Kong news type of deal. 
+
+```{r}
+pca_author$rotation[order(abs(pca_author$rotation[,5]),decreasing=TRUE),2][1:25]
+```
+  
+Again we have a focus on political news especially regarding china. Judging from these 5 principal components, it seems that the best factors to determine author attribution to a document is basically whether they wrote about China or not. We then decided to run these principal components into multiple models including logistic regression, naive bayes, KNN, and a random forest m=5 tree model. To do so, we would combine our principal component analysis matrix with the author names in the training set into a training dataframe. The test dataframe would be constructed from the tf_idf test matrix and the list of authors in the testing set. Using the training dataframe, we would then make our model predicting author attribution based on the principal components. We would then test our model's prediction with the test dataframe and obtain an accuracy score. Out of all our models, the random forest tree model with m=5 performed the best. 
+  
+```{r,echo=FALSE,include=FALSE}
+#Create a train dataframe with the PCAs and author column.
+train_df = as.data.frame(cbind(pca_author$x,Author=author_train$Author))
+
+#Create a test dataframe. Using all the TF-IDF plus author.
+test_df = as.data.frame(cbind(X_test,Author=author_test_df$Author))
+
+
+rf_author = randomForest(as.factor(train_df$Author)~., 
+                       data=train_df, #Use train-value data
+                       mtry=5, #Use 5 predictors
+                       importance =TRUE)
+
+rf_pred = predict(rf_author, data = test_df)
+rf_confusion_matrix = confusionMatrix(table(rf_pred,test_df$Author))
+```
+```{r}
+rf_confusion_matrix$overall
+```
+  
+We used the library(caret) to create the confusion matrix. We found that our overall accuracy with random forests came out to be 73.84% which is better than our other models. 
+```{r}
+importance(rf_author)[,1:4]
+```
+  
+From this snippet of the output of the importance function, we can see that the principal components importance vary across the authors but the first ones tend to be quite important towards predicting authors which makes sense considering those first principal components are the most important factors in the document.
+
+```{r, echo = FALSE, include = FALSE}
+#For grading purposes, we included our attempts at the other models.
+#The Naive Bayes model has an accuracy of 0.02 so that's obviously not good.
+#This code is commentated out.
+
+############################Model Time#########################################
+
+#########################Logistic did not work #################################
+# # Construct the feature matrix and response vector.
+# # We'll take as candidate variables the leading PCs.
+# # Here TFIDF + PCA + truncating the lower-order (noisier) PCs
+# # is our "feature engineering" pipeline.
+# 
+# X1 = pca_author$x[,1:2]
+# y = {author_data$Author}
+# 
+# # Lasso cross validation
+# out1 = cv.glmnet(X1, y, family='multinomial', type.measure="class")
+# 
+# # Choose lambda to minimize CV error
+# plot(out1$lambda, out1$cvm, log='X')
+# lambda_hat = out1$lambda.min
+# 
+# # refit to the full data set with the "optimal" lambda
+# glm1 = glmnet(X1, y, family='multinomial', lambda = lambda_hat)
+# 
+# # The fit
+# glm1$beta
+# plot(glm1$beta)
+# 
+# # degrees of freedom and cross-validated misclassification rate
+# glm1$df
+# min(out1$cvm)  
+
+#####################Logistic = failure. Let's try out tree.
+
+# ####
+# # Naive Bayes Classifier since logistic doesn't work.
+# ####
+# 
+# library(e1071)
+# #Create train and test dataframes for the naive bayes model.
+# 
+# #Same dataframes as RF.
+# #Create a train dataframe with the PCAs and author column.
+# train_df = as.data.frame(cbind(pca_author$x,Author=author_train$Author))
+# 
+# #Create a test dataframe. Using all the TF-IDF plus author.
+# test_df = as.data.frame(cbind(X_test,Author=author_test_df$Author))
+# 
+# 
+# NB = naiveBayes(as.factor(train_df$Author)~.,data=train_df)
+# NB_pred = predict(NB, as.factor(test_df$Author))
+# 
+# #Wait it's all AoronPressman.
+# #Pretty sure that's not how it's supposed to go.
+# #Well there was an attempt.
+# NB_table = as.data.frame(table(NB_pred,as.factor(author_test$Author)))
+# 
+# mean(NB_pred == test_df$Author)
+
+
+# ####################################KNN model##################################
+# library(kknn)
+# 
+# #Similar to RF except now the pcas for the test set must be inferred.
+# #It's a prediction within a prediction so I don't expect this model to go that well.
+# X_test1 = predict(pca_author,newdata=X_test)
+# 
+# #Create a train dataframe with the PCAs and author column.
+# train_df = as.data.frame(cbind(pca_author$x,Author=author_train$Author))
+# 
+# #Create a test dataframe. Using all the TF-IDF plus author.
+# test_df = as.data.frame(cbind(X_test1,Author=author_test_df$Author))
+# 
+# 
+# 
+# knn <- kknn(as.factor(train_df$Author)~.,train = train_df, test = test_df, k=4)
+# 
+# #This one also doesn't work. lol. I guess RF is our best and only model.
+```
+  
+## Problem 6: Association rule mining  
+
+```{r, echo = FALSE}
+groceries = read.transactions("groceries.txt", sep = ",")# all the food items are separated by commas 
+#inspect(groceries[0:20]) #printing out the first 20 transactions
+summary(groceries)
+```
+  
+For reading in the file, we used the sep=',' parameter. Looking at the file itself, we can see that there are a total of 9835 transactions in our data. Of those transactions, 2159 transactions have an item basket of only 1 item and more than half of the transactions have 3 items or less. 
+  
+```{r, echo = FALSE}
+itemFrequencyPlot(groceries,topN=20,type="absolute") # type by default is relative but using absolute gives us a better interpretation
+```
+  
+If we take a look at the item frequency distribution, we can see that whole milk is present in a whopping 2513 number of transactions. This makes sense as milk is a staple and has a somewhat short shelf life which necessitates purchasing it a lot. 
+  
+```{r}
+table = crossTable(groceries) # using the crosstable we can test out different combinations and see the number of transactions for that combination
+table["whole milk","ham"]
+```
+  
+We also played around with crosstable to look at the various different combinations of items. For instance, we found that whole milk and ham appear 113 times. After this, we decided to play around with the item rules.  
+  
+```{r, echo = FALSE, include = FALSE}
+#create all the rules with support >= 0.05 and confidence >= 0.3
+rules1 = apriori(groceries, 
+                      parameter=list(support=0.05, confidence=0.3, minlen=2))
+```
+```{r}
+arules::inspect(rules1)
+```
+  
+Our first rule was looking at a support values $>=$ 0.05 which essentially stands for the percentage of occurences that this happens in the entire dataset and a confidence levels $>=$ 0.3 which is basically how likely this interaction will happen. As we can see, this criteria gave us 3 rules. Let's use rule 1 as an example on how to interpret thse rules. Basically if a person buys yogurt, there is about a 40.16% chance that they also buy whole milk. which is represented in the following plot.  
+  
+```{r,echo=FALSE}
+plot(rules1, method="graph", measure="confidence")
+```
+  
+This plot shows that yogurt tends to be purchased with whole milk along with other vegetables and roll/buns. To find other interesting item combinations, we continued to play around with the support and confidence parameters.
+  
+```{r,echo = FALSE, include = FALSE}
+#we can now decrease the support and keep confidence the same at 0.3
+rules2 = apriori(groceries, 
+                 parameter=list(support=0.03, confidence=0.3, minlen=2))
+```
+```{r}
+arules::inspect(rules2)
+```
+  
+```{r, echo=FALSE}
+plot(rules2, method="graph", measure="confidence")
+```
+We kept confidence constant at 0.3 and decreased support to 0.03 for this rule. We found 14 rules associated with this criteria. As expected, whole milk seems to dominate most of the items as it is involved in a lot of purchases but there were some combinations like sausage to roll/buns that managed to come through. 
+  
+```{r,echo=FALSE,include=FALSE}
+rules3 = apriori(groceries, 
+                 parameter=list(support=0.005, confidence=0.7, minlen=2))
+```
+```{r,echo = FALSE}
+arules::inspect(rules3)
+
+```
+  
+```{r, echo = FALSE}
+plot(rules3, method="graph", measure="confidence")
+```
+  
+Seeing as we got more rules from decreasing support, we wanted to decrease support even further while tightening up confidence to see what would happen. This led us to trying out 0.005 and 0.7 for those respective parameters. The results we obtained are shown above. From our experimentation here, we note that increasing confidence as expected does decrease the number of item rules while decreasing support levels increases them.
+  
+```{r,echo=FALSE,include=FALSE}
+rules4 = apriori(groceries, 
+                      parameter=list(support=0.002, confidence=0.8, minlen=2))
+```
+```{r,echo=FALSE}
+arules::inspect(rules4)
+```
+  
+```{r,echo=FALSE}
+plot(rules4, method="graph", measure="confidence")
+```
+  
+To further confirm our suspicions, for our final tuning we changed the parameter to 0.002 support and 0.8 confidence. This resulted in a plot for 11 rules as seen above. 
+  
+  
+  

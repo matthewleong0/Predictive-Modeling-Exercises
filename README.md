@@ -4,11 +4,13 @@ STA380\_exercises
 This github repistory contains our solutions to the predictive modeling
 part 2 exercises for the MSBA program at UT Austin.
 
-# Authors   
-- Matthew Leong  
-- Chirag Ramesh  
-- Grayson Taylor  
-- Paridhi Sheth
+Authors
+=======
+
+-   Matthew Leong  
+-   Chirag Ramesh  
+-   Grayson Taylor  
+-   Paridhi Sheth
 
 Problem 1: Visual story telling part 1: green buildings
 -------------------------------------------------------
@@ -36,7 +38,7 @@ the guru’s analysis falls apart because he forgot to consider other
 variables. To demonstrate this issue, let’s look at the box plot
 obtained when the other variables are not considered.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 The box plot demonstrates the distribution of the split that the guru
 did. As we can see from the box plot, rent does not seem to differ that
@@ -47,7 +49,7 @@ distribution, it will not necessarily hold true when we add in
 additional factors. For instance, let us see what would happen when we
 add in whether or not a building is high quality.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 Naturally, as one would expect, high class buildings have a higher rent
 associated with them. If we go with the median standard, we can see that
@@ -59,7 +61,7 @@ this is a confounding variable problem which is basically how another
 variable like high class status affects rent and green certification
 status. This is not the only confounding variable.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 Another such confounding variable left out by the guru is the average
 rent in the local market. This variable has a key relationship with rent
@@ -74,7 +76,7 @@ implying that green certification does not actually affect the rent
 price. To further support this case, let’s look at a couple more
 potential confounding variables and see if the distributions differ.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 Again, when controlling for electricity costs, we can see that the
 distributions do not differ significantly further implying that rent and
@@ -85,7 +87,7 @@ buildings have lower fixed costs than standard energy buildings which
 allow them to charge less rent based on energy usage. This odd
 phenomenon is also reflected in another energy measurement variable.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 Degree days in this data set are essentially measures of demand for
 energy where higher values mean greater demand. As this is another
@@ -127,7 +129,7 @@ NAS, D = security). No cancellations due to security in our data set.
 Spring has most cancellations overall and the most due to weather which
 is surprising considering winter would be expected to have the harshest
 weather.
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 WN (Southwest Airlines) and AA (American Airlines) are notably the most
 popular airlines out of Austin airport.
@@ -163,59 +165,59 @@ lastly, SPY being one of the safest and largest ETFs.
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query2.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/YYY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/IWF?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/IWF?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/IWF?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-4.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-5.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-4.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-5.png)
 
     ##                ClCl.SPYa ClCl.SVXYa    ClCl.QQQa ClCl.YYYa    ClCl.IWFa
     ## 2007-01-03            NA         NA           NA        NA           NA
@@ -225,7 +227,7 @@ lastly, SPY being one of the safest and largest ETFs.
     ## 2007-01-09 -0.0008498831         NA  0.005013605        NA  0.001264433
     ## 2007-01-10  0.0033315799         NA  0.011791406        NA  0.006855511
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-6.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-7.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-8.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-9.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-16-10.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-6.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-7.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-8.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-9.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-10.png)
 The starting wealth value is $100,000.
 
 Portfolio 1: Modeling a safe portfolio
@@ -237,68 +239,68 @@ ETFs used: “SPY” , “QQQ”, “AOR”
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=OlsAtxYwswp'
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/SPY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/QQQ?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query2.finance.yahoo.com/v7/finance/download/EPV?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/EPV?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/EPV?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/AOR?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/AOR?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=OlsAtxYwswp'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
 
     ##            SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted
     ## 2014-01-02 161.8579 161.9371 160.5383  160.9254  119636900     160.9254
@@ -323,52 +325,52 @@ ETFs used: “SPY” , “QQQ”, “AOR”
     ## 2014-01-08 -0.0026042447
     ## 2014-01-09 -0.0007832637
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
     ##              [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-    ## result.1 108371.9 117509.4 127389.5 137380.9 149380.7 163317.7 177563.4
-    ## result.2 107602.3 116549.3 125684.9 135962.6 147499.7 159374.5 168011.8
-    ## result.3 108491.6 118887.8 129400.9 139883.4 151532.4 164639.2 179674.6
-    ## result.4 108244.8 117083.0 125496.7 135512.1 146227.5 159032.6 172748.1
-    ## result.5 108780.6 118578.4 128002.5 138953.4 149409.9 161468.3 175396.5
-    ## result.6 108010.2 116260.7 125576.8 134693.4 146021.0 157976.4 173284.8
+    ## result.1 107105.1 116109.3 127295.7 137364.8 149812.9 162928.4 172820.1
+    ## result.2 106480.1 115135.9 125043.0 134731.0 145548.6 154430.4 167048.3
+    ## result.3 108443.8 117036.0 126458.8 136322.4 146809.9 159205.7 172720.7
+    ## result.4 107934.4 116625.8 126129.5 138003.5 149359.1 159563.7 174980.2
+    ## result.5 108184.2 117354.4 127547.3 138080.5 147515.2 160007.7 172240.6
+    ## result.6 109088.1 118226.2 129504.4 139857.5 151306.6 162744.4 174740.5
     ##              [,8]     [,9]    [,10]    [,11]    [,12]    [,13]    [,14]
-    ## result.1 191626.2 209058.1 225860.4 238546.5 257200.9 276238.5 299869.2
-    ## result.2 181752.1 195933.1 211438.4 228629.8 245191.2 265985.9 289817.8
-    ## result.3 193497.1 210172.5 227079.5 244571.2 264124.5 279447.4 301427.0
-    ## result.4 182962.4 198666.3 214774.8 234274.7 254381.7 277503.8 300930.3
-    ## result.5 190279.7 205038.1 221809.7 237522.5 256336.0 277180.6 297257.5
-    ## result.6 185990.3 200896.7 215060.2 233845.1 252843.9 275017.1 298651.8
+    ## result.1 188970.8 206682.3 222830.8 240702.6 260242.9 280856.0 305731.3
+    ## result.2 181176.1 195707.1 211042.8 224437.2 241719.7 261703.8 282443.2
+    ## result.3 186393.1 201119.4 219976.1 238649.8 257812.9 278500.3 295623.3
+    ## result.4 186134.0 201637.1 217175.3 230172.3 249128.7 269410.4 289964.9
+    ## result.5 185309.8 201165.8 218755.0 238511.8 255458.3 274434.7 299967.6
+    ## result.6 185894.7 200505.7 216647.9 234698.3 253462.2 273642.1 292808.3
     ##             [,15]    [,16]    [,17]    [,18]    [,19]    [,20]
-    ## result.1 325166.6 353983.8 382803.4 410643.5 445037.9 484185.8
-    ## result.2 311775.0 336553.5 363578.0 389910.7 422022.3 455017.9
-    ## result.3 323594.4 348831.9 376922.5 404777.7 439944.8 474975.9
-    ## result.4 327238.4 356981.6 385561.8 419459.9 458594.9 491467.9
-    ## result.5 322770.1 344478.6 372949.7 401221.7 433661.8 467888.0
-    ## result.6 327144.7 339972.6 370836.4 399386.9 429257.7 466123.4
+    ## result.1 331767.8 358660.9 387248.8 420942.9 443429.7 478499.5
+    ## result.2 305320.0 334777.3 361710.0 408765.0 440675.2 474314.8
+    ## result.3 320724.1 345618.9 369576.8 399143.8 430042.4 459271.4
+    ## result.4 312572.9 338333.5 366969.1 394380.9 428267.1 462753.5
+    ## result.5 324275.9 350229.0 377756.5 410395.5 444014.6 479980.3
+    ## result.6 316558.3 339230.6 363442.4 393538.8 416094.1 446178.1
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-17-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-17-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-17-4.png)
-
-    ## Confidence Interval from Bootstrap Distribution (5000 replicates)
-
-    ## 
-    ## Average return of investement after 20 days 470666.4
-
-    ## 
-    ## 5% Value at Risk for safe portfolio- 336460.2
-
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-19-1.png)
-
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-20-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-20-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-20-3.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-4.png)
 
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 470666.4 
+    ## Average return of investement after 20 days 470683
+
+    ## 
+    ## 5% Value at Risk for safe portfolio- 336054.2
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-19-1.png)
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-20-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-20-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-20-3.png)
+
+    ## Confidence Interval from Bootstrap Distribution (5000 replicates)
+
+    ## 
+    ## Average return on investement after 20 days 470683 
     ## NULL
 
     ## 
-    ## 5% Value at Risk for safe portfolio- 336460.2
+    ## 5% Value at Risk for safe portfolio- 336054.2
 
 -   Portfolio 2: High Risk Model
 
@@ -376,31 +378,31 @@ Using ETFs: SVXY, YYY, IWF
 
 Distributed 90% of the total wealth among the low performing ETFs
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-23-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-24-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-24-3.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-24-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-24-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-24-3.png)
 
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 388181.4
+    ## Average return on investement after 20 days 387877.8
 
     ## 
-    ## 5% Value at Risk for High portfolio- 261972.4
+    ## 5% Value at Risk for High portfolio- 260927.5
 
 \*Portfolio 3: Using equal weights for all ETFs
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-26-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-26-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-26-3.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-26-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-26-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-26-3.png)
 
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 141.295
+    ## Average return on investement after 20 days 141.3441
 
     ## 
-    ## 5% Value at Risk for High portfolio- -99868.25
+    ## 5% Value at Risk for High portfolio- -99868.91
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-28-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 Write a report summarizing your portfolios and your VaR findings.
 =================================================================
@@ -446,7 +448,7 @@ the each of the column categories.
     ## [33] "personal_fitness" "fashion"          "small_business"   "spam"            
     ## [37] "adult"
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-31-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 Chatter is the largest category, however it is going to be hard to make
 conclusions based off that category. Photosharing and nutrition are the
@@ -455,7 +457,7 @@ sports\_fandom.
 
     ## corrplot 0.84 loaded
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-32-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-32-1.png)
 
 We can then determine which column categories are most correlated by
 running a corrplot, the darker the square the more highly correlated the
@@ -470,45 +472,45 @@ To further investigate market segments past two dimensional correlation
 we will now use K-means clustering. K-means clustering will provide us
 additonal info on which categories are correlated and tweeted together.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-35-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 We decide to go with K=5 for our clusters based off our elbow model and
 intuition on the data set.
 
 Cluster one:
 
+    ##          chatter    photo_sharing   current_events      college_uni 
+    ##         3.650288         1.839885         1.362176         1.093720 
+    ## health_nutrition           travel 
+    ##         1.085810         1.049616
+
+Cluster Two:
+
     ## sports_fandom      religion          food     parenting       chatter 
     ##      6.022973      5.414865      4.628378      4.137838      4.095946 
     ##        school 
     ##      2.737838
 
-Cluster Two:
+Cluster Three:
 
     ##       chatter photo_sharing       cooking   college_uni       fashion 
     ##      6.936364      5.513986      4.964336      3.244755      2.763636 
     ##      shopping 
     ##      2.717483
 
-Cluster Three:
+Cluster Four:
 
     ## health_nutrition personal_fitness          chatter          cooking 
     ##        12.265517         6.559770         4.091954         3.485057 
     ##         outdoors    photo_sharing 
     ##         2.790805         2.555172
 
-Cluster Four:
+Cluster Five:
 
     ##      politics        travel          news       chatter     computers 
     ##      9.164179      5.808955      5.264179      4.376119      2.583582 
     ## photo_sharing 
     ##      2.398507
-
-Cluster Five:
-
-    ##          chatter    photo_sharing   current_events      college_uni 
-    ##         3.650288         1.839885         1.362176         1.093720 
-    ## health_nutrition           travel 
-    ##         1.085810         1.049616
 
 Cluster Analysis:
 -----------------
@@ -869,7 +871,7 @@ obtain an accuracy score. Out of all our models, the random forest tree
 model with m=5 performed the best.
 
     ##       Accuracy          Kappa  AccuracyLower  AccuracyUpper   AccuracyNull 
-    ##      0.7376000      0.7322449      0.7198829      0.7547589      0.0200000 
+    ##      0.7384000      0.7330612      0.7206989      0.7555410      0.0200000 
     ## AccuracyPValue  McnemarPValue 
     ##      0.0000000            NaN
 
@@ -878,56 +880,56 @@ our overall accuracy with random forests came out to be 73.84% which is
 better than our other models.
 
     ##      AaronPressman AlanCrosby AlexanderSmith BenjaminKangLim
-    ## PC1      18.257547  15.000838      14.375177       16.992750
-    ## PC2      16.525025  16.407251      10.591985       14.779341
-    ## PC3      12.377055  19.772847      13.031122        6.004141
-    ## PC4      11.465647  15.431304      15.245879       11.196078
-    ## PC5       9.842852  16.633776      14.495026       13.172259
-    ## PC6      22.387233  14.879533      15.088185       17.466679
-    ## PC7      13.182732  14.648797      10.679338       10.637773
-    ## PC8      15.805190  16.771413      15.215369       12.359171
-    ## PC9      11.440242  13.497755      11.192480        7.237002
-    ## PC10      8.007576   7.187139       8.193968        8.749853
-    ## PC11     11.962822  11.483494       8.067302        7.975477
-    ## PC12      7.627332  12.117827       8.065250        7.781589
-    ## PC13      7.899442  10.139687       8.752114        6.290869
-    ## PC14     13.810030  15.451381      12.816239       13.388154
-    ## PC15      7.797874  10.151636       7.230070        8.326694
-    ## PC16      9.076289  15.601310       7.957115        2.438471
-    ## PC17      7.567585  12.648928       8.019661        5.749946
-    ## PC18     10.712305  12.678652      10.900279        7.038370
-    ## PC19     16.089772  13.589040      11.763646       10.380309
-    ## PC20      6.272229  10.013925       7.491210        9.199670
-    ## PC21     10.094107  11.043020      11.466038       12.772578
-    ## PC22      9.103448  12.123366      10.712121        4.844315
-    ## PC23      8.483578   9.389254       7.991686        2.561746
-    ## PC24      8.462825   9.241527       9.264862        6.670875
-    ## PC25      3.274066  12.575054       7.239399        8.325407
-    ## PC26     11.094311  10.068638      10.095347        6.969661
-    ## PC27      2.568094   6.915142       8.170401        3.971070
-    ## PC28      6.264429   6.939515       8.562763        6.619990
-    ## PC29      5.891094   8.751774       6.534558        4.189149
-    ## PC30      4.157981   9.073331       7.849004        3.537126
-    ## PC31     10.701444   7.054991       4.547416        4.384370
-    ## PC32      8.423867   8.907386       4.053594        1.665847
-    ## PC33      3.606812   5.481162       6.172030        6.219988
-    ## PC34      4.308898   8.495537       4.300497        4.687265
-    ## PC35      6.330615   4.699672       4.772314        3.471903
-    ## PC36     12.989830   9.434527       9.758779        3.976074
-    ## PC37      5.753681   7.171461       7.318325        1.651489
-    ## PC38      7.177794   5.952376       8.954986        2.650325
-    ## PC39      3.487012   6.467728       7.162769        4.166892
-    ## PC40      4.161893   8.337237       5.630258        2.638999
-    ## PC41      6.562840   9.962640       5.680908        5.402100
-    ## PC42      5.758490   6.741846       7.007922        5.354964
-    ## PC43      3.335629   8.167623       6.166112        3.785641
-    ## PC44      3.908008   4.796648       6.108057        4.932984
-    ## PC45      5.873541   7.852657       3.647981        4.830612
-    ## PC46      4.730206   5.157371       6.759539        1.853891
-    ## PC47      5.040825   4.486999       6.821192        2.658780
-    ## PC48      6.093683   9.072546       6.422468        2.838664
-    ## PC49      5.680882   9.329408       3.803008        2.980972
-    ## PC50      4.082447  11.215327       4.341329        0.126266
+    ## PC1      18.104815  15.374810      13.914886       17.944395
+    ## PC2      15.584885  17.548072      11.793417       13.305914
+    ## PC3      12.596754  19.397343      11.403150        6.569345
+    ## PC4      13.430597  16.606025      15.578297        9.685188
+    ## PC5      12.320415  16.639865      13.851489       14.653433
+    ## PC6      21.851473  15.459662      13.970982       18.073427
+    ## PC7      13.403016  13.786152      10.654097       10.814231
+    ## PC8      16.013540  17.268078      14.605603       11.955208
+    ## PC9      13.524856  15.119734      10.550615        5.772846
+    ## PC10      8.075668   7.677590       9.666089        8.118706
+    ## PC11     13.352776  11.307572       8.292222        8.239256
+    ## PC12      8.161096  11.321287       8.007091        9.756316
+    ## PC13      7.840952  10.824851       8.815576        5.546660
+    ## PC14     13.288546  15.830940      11.737054       14.216096
+    ## PC15      6.880322  12.253582       7.562352        6.979964
+    ## PC16      9.087966  15.589323       9.167884        2.395911
+    ## PC17      7.147315  14.972546       7.168435        7.059666
+    ## PC18     10.764181  12.239106      10.022459        8.358320
+    ## PC19     15.566635  13.379145      10.782118       11.314928
+    ## PC20      5.426101  10.335158       7.646348        9.799187
+    ## PC21      9.479402  11.220251      10.812583       12.022962
+    ## PC22      8.467997  12.426734       9.812560        3.638540
+    ## PC23      7.751307   8.579608       7.245063        3.999725
+    ## PC24      7.812012  11.235046      10.657519        6.653625
+    ## PC25      4.322389  13.685979       7.128995        7.705887
+    ## PC26     10.311579  10.100298      10.594330        7.562238
+    ## PC27      4.875772   7.175803       6.631514        4.084133
+    ## PC28      5.836971   7.257890       5.934348        4.315827
+    ## PC29      6.034716   9.334417       6.875735        4.229946
+    ## PC30      3.790957   8.431478       8.487539        4.534616
+    ## PC31     10.947949   5.566709       1.618001        1.312152
+    ## PC32      9.821815   6.411987       6.019852        1.404319
+    ## PC33      5.051630   7.078968       5.683853        3.175340
+    ## PC34      5.169841   8.439111       6.070377        6.347680
+    ## PC35      8.274019   8.459078       4.275719        4.004473
+    ## PC36     13.520231   8.063323       8.840730        3.513899
+    ## PC37      6.158079   5.943187       4.429595        3.192530
+    ## PC38      4.694115   6.826718       7.558151        3.683620
+    ## PC39      6.392442   4.980291       6.065392        3.656028
+    ## PC40      5.200257   8.400106       6.405725        2.535381
+    ## PC41      6.018035  10.680096       5.919439        6.838702
+    ## PC42      5.159047   7.093915       5.900710        4.525216
+    ## PC43      4.237079   7.741056       4.860218        3.636421
+    ## PC44      3.833334   4.353012       6.600840        4.436679
+    ## PC45      5.767416   8.591142       4.548555        4.643501
+    ## PC46      2.894404   5.923697       6.093852        0.641058
+    ## PC47      4.224398   6.169692       6.722263        3.068482
+    ## PC48      6.589638   9.767341       5.604333        2.595204
+    ## PC49      4.968420   9.293775       5.309233        5.222420
+    ## PC50      4.619195  11.320872       3.478773        1.093444
 
 From this snippet of the output of the importance function, we can see
 that the principal components importance vary across the authors but the
@@ -970,7 +972,7 @@ our data. Of those transactions, 2159 transactions have an item basket
 of only 1 item and more than half of the transactions have 3 items or
 less.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-70-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-70-1.png)
 
 If we take a look at the item frequency distribution, we can see that
 whole milk is present in a whopping 2513 number of transactions. This
@@ -993,16 +995,16 @@ rules.
     ## [2] 557  
     ## [3] 736
 
-Our first rule was looking at a support values  &gt; = 0.05 which
+Our first rule was looking at a support values  \> = 0.05 which
 essentially stands for the percentage of occurences that this happens in
-the entire dataset and a confidence levels  &gt; = 0.3 which is
-basically how likely this interaction will happen. As we can see, this
-criteria gave us 3 rules. Let’s use rule 1 as an example on how to
-interpret thse rules. Basically if a person buys yogurt, there is about
-a 40.16% chance that they also buy whole milk. which is represented in
-the following plot.
+the entire dataset and a confidence levels  \> = 0.3 which is basically
+how likely this interaction will happen. As we can see, this criteria
+gave us 3 rules. Let’s use rule 1 as an example on how to interpret thse
+rules. Basically if a person buys yogurt, there is about a 40.16% chance
+that they also buy whole milk. which is represented in the following
+plot.
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-74-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-74-1.png)
 
 This plot shows that yogurt tends to be purchased with whole milk along
 with other vegetables and roll/buns. To find other interesting item
@@ -1040,7 +1042,7 @@ confidence parameters.
     ## [13] 0.18393493 1.205032 557  
     ## [14] 0.19349263 1.513634 736
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-77-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-77-1.png)
 We kept confidence constant at 0.3 and decreased support to 0.03 for
 this rule. We found 14 rules associated with this criteria. As expected,
 whole milk seems to dominate most of the items as it is involved in a
@@ -1052,7 +1054,7 @@ roll/buns that managed to come through.
     ##     confidence coverage    lift     count
     ## [1] 0.7        0.008134215 2.739554 56
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-80-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-80-1.png)
 
 Seeing as we got more rules from decreasing support, we wanted to
 decrease support even further while tightening up confidence to see what
@@ -1099,7 +1101,7 @@ increases them.
     ##       tropical fruit,                                                                               
     ##       yogurt}                => {whole milk}       0.002236909  0.8148148 0.002745297 3.188899    22
 
-![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_strict/unnamed-chunk-83-1.png)
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-83-1.png)
 
 To further confirm our suspicions, for our final tuning we changed the
 parameter to 0.002 support and 0.8 confidence. This resulted in a plot
