@@ -4,7 +4,8 @@ STA380\_exercises
 This github repistory contains our solutions to the predictive modeling
 part 2 exercises for the MSBA program at UT Austin.
 
-\#Authors - Matthew Leong  
+#Authors   
+- Matthew Leong  
 - Chirag Ramesh  
 - Grayson Taylor  
 - Paridhi Sheth
