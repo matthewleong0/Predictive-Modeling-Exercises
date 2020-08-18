@@ -142,7 +142,7 @@ abia_df$Season = ifelse(abia_df$Month %in% c(12,1,2),"Winter", #December, Januar
   
 In our initial analysis we decided to take a look at seasons and see if we can find any significant findings with various variables using seasons as a parameter. We begin by plotting flight distance by season.
   
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Density plot for distance.
 ggplot(data = abia_df, aes(x=Distance)) + geom_density(aes(fill=factor(Season)),alpha = 1) +
   scale_color_manual(values =c('Winter' ='blue','Fall'='orange',"Summer"='Yellow','Spring'='Green')) +
@@ -158,7 +158,7 @@ ggplot(data = abia_df, aes(x=Distance)) + geom_density(aes(fill=factor(Season)),
 Summer has the longest distance flights followed by fall, spring and winter. In our z-score graph you can see this difference magnified.
   
 
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Bar plot of average distance+z score of distance
 
 # Calculate average distance
@@ -197,7 +197,7 @@ figure
 
   
 
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Flight cancellations codes by season
 canceled_flights = subset(abia_df, CancellationCode != '')
 ggplot(data = canceled_flights, mapping = aes(x = as.factor(CancellationCode))) +
@@ -212,7 +212,7 @@ ggplot(data = canceled_flights, mapping = aes(x = as.factor(CancellationCode))) 
 ```
 
 CancellationCode reason for cancellation (A = carrier, B = weather, C = NAS, D = security). No cancellations due to security in our data set. Spring has most cancellations overall and the most due to weather which is surprising considering winter would be expected to have the harshest weather.
-```{r}
+```{r, echo=FALSE}
 #Total flights by carrier
 plot1 <- ggplot(aes(x=UniqueCarrier), data=abia_df) +
   geom_bar(fill="SteelBlue", position='dodge') +
@@ -222,13 +222,11 @@ plot1 <- ggplot(aes(x=UniqueCarrier), data=abia_df) +
        x = "Airline Carrier")
 
 print(plot1)
-
-
 ```
 
 WN (Southwest Airlines) and AA (American Airlines) are notably the most popular airlines out of Austin airport. 
 
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Flights cancelled by carrier
 ggplot(abia_df, aes(x=UniqueCarrier, y=Cancelled)) + geom_bar(stat='identity', color="SteelBlue") +
   labs(title="Cancellations by Carrier", 
@@ -239,7 +237,7 @@ ggplot(abia_df, aes(x=UniqueCarrier, y=Cancelled)) + geom_bar(stat='identity', c
 
 WN (Southwest Airlines), AA (American Airlines), and MQ (Envoy Air) are the most frequently canceled airlines out of Austin airport. AA flights and MQ flights are disproportionately cancelled more relative to WN.
 
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Total flights by carrier by season
 plot1 <- ggplot(aes(x=UniqueCarrier, fill=Season), data=abia_df) +
   geom_bar(position='dodge') +
@@ -258,7 +256,7 @@ print(plot1)
 
 
 
-```{r include = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 #Total Cancellations by Carrier by season
 ggplot(abia_df, aes(x=UniqueCarrier, y=Cancelled, fill=Season)) + geom_bar(stat='identity') +
   facet_wrap(~ Season,nrow =2,ncol=2) +

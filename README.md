@@ -121,8 +121,16 @@ In our initial analysis we decided to take a look at seasons and see if
 we can find any significant findings with various variables using
 seasons as a parameter. We begin by plotting flight distance by season.
 
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
 Summer has the longest distance flights followed by fall, spring and
 winter. In our z-score graph you can see this difference magnified.
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 CancellationCode reason for cancellation (A = carrier, B = weather, C =
 NAS, D = security). No cancellations due to security in our data set.
@@ -134,9 +142,15 @@ weather.
 WN (Southwest Airlines) and AA (American Airlines) are notably the most
 popular airlines out of Austin airport.
 
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
 WN (Southwest Airlines), AA (American Airlines), and MQ (Envoy Air) are
 the most frequently canceled airlines out of Austin airport. AA flights
 and MQ flights are disproportionately cancelled more relative to WN.
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 Problem 3: Portfolio modeling
 -----------------------------
@@ -165,57 +179,57 @@ lastly, SPY being one of the safest and largest ETFs.
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/IWF?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/IWF?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/IWF?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-1.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-4.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-16-5.png)
 
@@ -239,68 +253,68 @@ ETFs used: “SPY” , “QQQ”, “AOR”
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
-
-    ## Warning in read.table(file = file, header = header, sep = sep,
-    ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SPY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=pivYHdtgh.z'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/SPY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=div&crumb=F3f7LHLwSxt'
+
+    ## Warning in read.table(file = file, header = header, sep = sep,
+    ## quote = quote, : incomplete final line found by readTableHeader
+    ## on 'https://query1.finance.yahoo.com/v7/finance/download/SVXY?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/SVXY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/QQQ?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query2.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
     ## on 'https://query1.finance.yahoo.com/v7/finance/download/YYY?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/EPV?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/EPV?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/EPV?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/EPV?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/AOR?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/AOR?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ## Warning in read.table(file = file, header = header, sep = sep,
     ## quote = quote, : incomplete final line found by readTableHeader
-    ## on 'https://query1.finance.yahoo.com/v7/finance/download/AOR?
-    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=pivYHdtgh.z'
+    ## on 'https://query2.finance.yahoo.com/v7/finance/download/AOR?
+    ## period1=-2208988800&period2=1597622400&interval=1d&events=split&crumb=F3f7LHLwSxt'
 
     ##            SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted
     ## 2014-01-02 161.8579 161.9371 160.5383  160.9254  119636900     160.9254
@@ -328,36 +342,36 @@ ETFs used: “SPY” , “QQQ”, “AOR”
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
     ##              [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-    ## result.1 107105.1 116109.3 127295.7 137364.8 149812.9 162928.4 172820.1
-    ## result.2 106480.1 115135.9 125043.0 134731.0 145548.6 154430.4 167048.3
-    ## result.3 108443.8 117036.0 126458.8 136322.4 146809.9 159205.7 172720.7
-    ## result.4 107934.4 116625.8 126129.5 138003.5 149359.1 159563.7 174980.2
-    ## result.5 108184.2 117354.4 127547.3 138080.5 147515.2 160007.7 172240.6
-    ## result.6 109088.1 118226.2 129504.4 139857.5 151306.6 162744.4 174740.5
+    ## result.1 108114.2 116782.8 126025.8 136676.7 146729.0 157905.0 170161.7
+    ## result.2 106698.9 115049.7 124403.9 135157.6 147049.5 157598.5 170486.8
+    ## result.3 108235.7 120336.2 130521.1 141501.0 153893.9 166286.1 179175.8
+    ## result.4 109721.2 118490.9 128544.4 138694.8 150832.7 163299.0 177356.2
+    ## result.5 108590.6 119113.4 126504.7 136516.6 147151.9 158948.0 169086.4
+    ## result.6 108959.8 117716.0 128118.4 138616.2 151795.7 164269.3 179186.8
     ##              [,8]     [,9]    [,10]    [,11]    [,12]    [,13]    [,14]
-    ## result.1 188970.8 206682.3 222830.8 240702.6 260242.9 280856.0 305731.3
-    ## result.2 181176.1 195707.1 211042.8 224437.2 241719.7 261703.8 282443.2
-    ## result.3 186393.1 201119.4 219976.1 238649.8 257812.9 278500.3 295623.3
-    ## result.4 186134.0 201637.1 217175.3 230172.3 249128.7 269410.4 289964.9
-    ## result.5 185309.8 201165.8 218755.0 238511.8 255458.3 274434.7 299967.6
-    ## result.6 185894.7 200505.7 216647.9 234698.3 253462.2 273642.1 292808.3
+    ## result.1 183151.2 197224.8 211167.1 228125.9 243712.1 263834.1 284160.8
+    ## result.2 183873.0 199289.8 217550.9 233559.4 251772.4 272971.2 293816.5
+    ## result.3 195184.4 210919.9 230520.9 249457.2 266709.5 288843.8 305045.2
+    ## result.4 193967.3 208128.4 226384.5 244985.0 262789.3 281874.9 304717.1
+    ## result.5 184043.2 199561.0 215010.4 230434.7 245933.0 268577.2 300409.8
+    ## result.6 192826.0 206957.7 222252.2 241358.5 263173.9 292830.5 290392.4
     ##             [,15]    [,16]    [,17]    [,18]    [,19]    [,20]
-    ## result.1 331767.8 358660.9 387248.8 420942.9 443429.7 478499.5
-    ## result.2 305320.0 334777.3 361710.0 408765.0 440675.2 474314.8
-    ## result.3 320724.1 345618.9 369576.8 399143.8 430042.4 459271.4
-    ## result.4 312572.9 338333.5 366969.1 394380.9 428267.1 462753.5
-    ## result.5 324275.9 350229.0 377756.5 410395.5 444014.6 479980.3
-    ## result.6 316558.3 339230.6 363442.4 393538.8 416094.1 446178.1
+    ## result.1 308177.1 333171.8 356729.1 384525.8 416032.9 451785.5
+    ## result.2 321086.5 346905.4 374975.9 403156.2 437944.4 474301.6
+    ## result.3 326746.5 352648.0 384978.1 414199.1 447073.3 481535.8
+    ## result.4 331527.6 357640.0 388970.0 420371.3 454735.5 494630.2
+    ## result.5 322547.4 352518.3 380993.5 409488.6 441044.0 474865.2
+    ## result.6 314151.1 342301.3 368668.5 398683.6 430991.6 464841.3
 
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-2.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-3.png)![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-17-4.png)
 
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return of investement after 20 days 470683
+    ## Average return of investement after 20 days 470513.6
 
     ## 
-    ## 5% Value at Risk for safe portfolio- 336054.2
+    ## 5% Value at Risk for safe portfolio- 336715.1
 
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
@@ -366,11 +380,11 @@ ETFs used: “SPY” , “QQQ”, “AOR”
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 470683 
+    ## Average return on investement after 20 days 470513.6 
     ## NULL
 
     ## 
-    ## 5% Value at Risk for safe portfolio- 336054.2
+    ## 5% Value at Risk for safe portfolio- 336715.1
 
 -   Portfolio 2: High Risk Model
 
@@ -385,10 +399,10 @@ Distributed 90% of the total wealth among the low performing ETFs
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 387877.8
+    ## Average return on investement after 20 days 388218.8
 
     ## 
-    ## 5% Value at Risk for High portfolio- 260927.5
+    ## 5% Value at Risk for High portfolio- 260592.2
 
 \*Portfolio 3: Using equal weights for all ETFs
 
@@ -397,10 +411,10 @@ Distributed 90% of the total wealth among the low performing ETFs
     ## Confidence Interval from Bootstrap Distribution (5000 replicates)
 
     ## 
-    ## Average return on investement after 20 days 141.3441
+    ## Average return on investement after 20 days 141.3032
 
     ## 
-    ## 5% Value at Risk for High portfolio- -99868.91
+    ## 5% Value at Risk for High portfolio- -99868.95
 
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
@@ -472,6 +486,8 @@ To further investigate market segments past two dimensional correlation
 we will now use K-means clustering. K-means clustering will provide us
 additonal info on which categories are correlated and tweeted together.
 
+    ## Warning: Quick-TRANSfer stage steps exceeded maximum (= 394100)
+
 ![](All-problems-compiled--this-one-used-to-make-the-md-_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 We decide to go with K=5 for our clusters based off our elbow model and
@@ -479,38 +495,38 @@ intuition on the data set.
 
 Cluster one:
 
+    ##      politics        travel          news       chatter     computers 
+    ##      9.164179      5.808955      5.264179      4.376119      2.583582 
+    ## photo_sharing 
+    ##      2.398507
+
+Cluster Two:
+
     ##          chatter    photo_sharing   current_events      college_uni 
     ##         3.650288         1.839885         1.362176         1.093720 
     ## health_nutrition           travel 
     ##         1.085810         1.049616
 
-Cluster Two:
-
-    ## sports_fandom      religion          food     parenting       chatter 
-    ##      6.022973      5.414865      4.628378      4.137838      4.095946 
-    ##        school 
-    ##      2.737838
-
 Cluster Three:
-
-    ##       chatter photo_sharing       cooking   college_uni       fashion 
-    ##      6.936364      5.513986      4.964336      3.244755      2.763636 
-    ##      shopping 
-    ##      2.717483
-
-Cluster Four:
 
     ## health_nutrition personal_fitness          chatter          cooking 
     ##        12.265517         6.559770         4.091954         3.485057 
     ##         outdoors    photo_sharing 
     ##         2.790805         2.555172
 
+Cluster Four:
+
+    ##       chatter photo_sharing       cooking   college_uni       fashion 
+    ##      6.936364      5.513986      4.964336      3.244755      2.763636 
+    ##      shopping 
+    ##      2.717483
+
 Cluster Five:
 
-    ##      politics        travel          news       chatter     computers 
-    ##      9.164179      5.808955      5.264179      4.376119      2.583582 
-    ## photo_sharing 
-    ##      2.398507
+    ## sports_fandom      religion          food     parenting       chatter 
+    ##      6.022973      5.414865      4.628378      4.137838      4.095946 
+    ##        school 
+    ##      2.737838
 
 Cluster Analysis:
 -----------------
@@ -871,7 +887,7 @@ obtain an accuracy score. Out of all our models, the random forest tree
 model with m=5 performed the best.
 
     ##       Accuracy          Kappa  AccuracyLower  AccuracyUpper   AccuracyNull 
-    ##      0.7384000      0.7330612      0.7206989      0.7555410      0.0200000 
+    ##      0.7380000      0.7326531      0.7202909      0.7551500      0.0200000 
     ## AccuracyPValue  McnemarPValue 
     ##      0.0000000            NaN
 
@@ -880,56 +896,56 @@ our overall accuracy with random forests came out to be 73.84% which is
 better than our other models.
 
     ##      AaronPressman AlanCrosby AlexanderSmith BenjaminKangLim
-    ## PC1      18.104815  15.374810      13.914886       17.944395
-    ## PC2      15.584885  17.548072      11.793417       13.305914
-    ## PC3      12.596754  19.397343      11.403150        6.569345
-    ## PC4      13.430597  16.606025      15.578297        9.685188
-    ## PC5      12.320415  16.639865      13.851489       14.653433
-    ## PC6      21.851473  15.459662      13.970982       18.073427
-    ## PC7      13.403016  13.786152      10.654097       10.814231
-    ## PC8      16.013540  17.268078      14.605603       11.955208
-    ## PC9      13.524856  15.119734      10.550615        5.772846
-    ## PC10      8.075668   7.677590       9.666089        8.118706
-    ## PC11     13.352776  11.307572       8.292222        8.239256
-    ## PC12      8.161096  11.321287       8.007091        9.756316
-    ## PC13      7.840952  10.824851       8.815576        5.546660
-    ## PC14     13.288546  15.830940      11.737054       14.216096
-    ## PC15      6.880322  12.253582       7.562352        6.979964
-    ## PC16      9.087966  15.589323       9.167884        2.395911
-    ## PC17      7.147315  14.972546       7.168435        7.059666
-    ## PC18     10.764181  12.239106      10.022459        8.358320
-    ## PC19     15.566635  13.379145      10.782118       11.314928
-    ## PC20      5.426101  10.335158       7.646348        9.799187
-    ## PC21      9.479402  11.220251      10.812583       12.022962
-    ## PC22      8.467997  12.426734       9.812560        3.638540
-    ## PC23      7.751307   8.579608       7.245063        3.999725
-    ## PC24      7.812012  11.235046      10.657519        6.653625
-    ## PC25      4.322389  13.685979       7.128995        7.705887
-    ## PC26     10.311579  10.100298      10.594330        7.562238
-    ## PC27      4.875772   7.175803       6.631514        4.084133
-    ## PC28      5.836971   7.257890       5.934348        4.315827
-    ## PC29      6.034716   9.334417       6.875735        4.229946
-    ## PC30      3.790957   8.431478       8.487539        4.534616
-    ## PC31     10.947949   5.566709       1.618001        1.312152
-    ## PC32      9.821815   6.411987       6.019852        1.404319
-    ## PC33      5.051630   7.078968       5.683853        3.175340
-    ## PC34      5.169841   8.439111       6.070377        6.347680
-    ## PC35      8.274019   8.459078       4.275719        4.004473
-    ## PC36     13.520231   8.063323       8.840730        3.513899
-    ## PC37      6.158079   5.943187       4.429595        3.192530
-    ## PC38      4.694115   6.826718       7.558151        3.683620
-    ## PC39      6.392442   4.980291       6.065392        3.656028
-    ## PC40      5.200257   8.400106       6.405725        2.535381
-    ## PC41      6.018035  10.680096       5.919439        6.838702
-    ## PC42      5.159047   7.093915       5.900710        4.525216
-    ## PC43      4.237079   7.741056       4.860218        3.636421
-    ## PC44      3.833334   4.353012       6.600840        4.436679
-    ## PC45      5.767416   8.591142       4.548555        4.643501
-    ## PC46      2.894404   5.923697       6.093852        0.641058
-    ## PC47      4.224398   6.169692       6.722263        3.068482
-    ## PC48      6.589638   9.767341       5.604333        2.595204
-    ## PC49      4.968420   9.293775       5.309233        5.222420
-    ## PC50      4.619195  11.320872       3.478773        1.093444
+    ## PC1      17.432514  15.492899      13.938335       17.315362
+    ## PC2      17.194779  16.451803       9.897772       14.372246
+    ## PC3      12.541115  19.660089      11.576503        6.216878
+    ## PC4      11.499224  15.453351      13.142244       10.368893
+    ## PC5      11.353124  16.509560      13.112563       14.814537
+    ## PC6      21.855955  14.492356      14.157140       17.992460
+    ## PC7      13.785114  14.204768      10.550314        8.759778
+    ## PC8      15.925572  18.217563      14.454064       11.638001
+    ## PC9      12.766519  14.799884      11.938007        7.386336
+    ## PC10      7.710134   7.797540       9.461812        8.232988
+    ## PC11     12.163611  10.351362       7.741874        8.171057
+    ## PC12      8.454772  13.649090       7.301028        6.143284
+    ## PC13      7.623766  11.927836       8.844265        6.658249
+    ## PC14     13.913158  15.761083      10.661337       10.382516
+    ## PC15      7.461635  10.978010       6.921214        8.767419
+    ## PC16      8.275419  16.905652       8.870459        3.620843
+    ## PC17      5.922400  14.120108       6.224411        5.895877
+    ## PC18     11.387643  11.644036      10.778211        7.200373
+    ## PC19     15.685844  12.493969      10.694741       11.385412
+    ## PC20      6.414504   8.705475       7.799822        8.623130
+    ## PC21      8.268587  11.158968      10.126168       13.267916
+    ## PC22      8.860724  10.254780      10.568121        4.155938
+    ## PC23      9.797425   8.094050       7.197931        3.441991
+    ## PC24      8.870546   8.772283      10.351363        7.002541
+    ## PC25      5.074866  12.718187       6.184803        8.217935
+    ## PC26     11.474288  10.314253       8.865212        7.118432
+    ## PC27      4.313670   7.246097       6.140525        5.670188
+    ## PC28      6.110272   7.389360       8.007441        5.525571
+    ## PC29      5.671110   8.540994       8.480023        4.991267
+    ## PC30      5.280189   8.443187       6.232469        3.257992
+    ## PC31     10.372213   6.689734       3.535545        3.222564
+    ## PC32      8.594142   7.829338       5.122004        1.702633
+    ## PC33      4.561678   4.974666       5.098081        5.113117
+    ## PC34      4.176453   9.668752       4.661328        4.535931
+    ## PC35      6.826272   7.409771       5.150520        5.150845
+    ## PC36     13.582710   9.245875       8.776261        4.374569
+    ## PC37      5.006177   6.927986       4.571925        2.246819
+    ## PC38      5.440826   5.597879       8.743877        5.402132
+    ## PC39      3.364131   5.977864       6.269904        1.429969
+    ## PC40      4.772170   8.458825       5.628428        2.844810
+    ## PC41      7.068827  10.208556       5.349475        7.102350
+    ## PC42      5.753405   7.273259       6.071944        3.239762
+    ## PC43      4.377883   8.474207       4.583852        3.109709
+    ## PC44      4.560824   5.280197       5.705561        3.403099
+    ## PC45      4.811428   8.288440       5.164006        5.171301
+    ## PC46      4.351649   7.069822       6.923067        1.294615
+    ## PC47      4.374570   4.308261       6.393135        1.867476
+    ## PC48      6.509900   9.770160       5.447848        3.064548
+    ## PC49      4.346981   8.847958       4.779616        3.416073
+    ## PC50      2.649395  11.174007       4.402671        1.448252
 
 From this snippet of the output of the importance function, we can see
 that the principal components importance vary across the authors but the
