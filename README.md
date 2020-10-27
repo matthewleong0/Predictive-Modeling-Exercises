@@ -18,7 +18,7 @@ Chirag handled problem 6 which was on association rule mining and wrote an outli
   
 Grayson handled problem 2's visualizations and did the clustering in problem 4 which was on unsupervised modeling methods. He wrote the part of problem 4's analysis regarding the clustering.  
   
-Paridhi did all of problem 3's coding and analysis which involved bootstrapping.  
+Paridhi did all of problem 3's coding and analysis which involved bootstrapping and modeling a portfolio.  
   
 Matthew was the "project manager" and problems 1 which involved visual story telling and 5 which involved unstructured text data code and analysis. He delegated the split in contribution in order to finish the exercises within a 4 day time frame. He also finished wrote the analysis based on Chirag's outline for problem 6. Matthew interpreted the partial components for problem 5 and 6. Lastly, he also helped Grayson with his coding issues.  
   
